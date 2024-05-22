@@ -2,10 +2,16 @@
 
     O Entregas é uma ferramenta web e móvel de delivery, que não só oferece um fluxo de entrega mais preciso, mas também proporciona um ambiente simplificado para o gerenciamento de produtos variáveis em lojas virtuais, reduzindo os custos de manutenção no mercado digital. Nesse contexto, esse repositório tem como finalidade codificar todo o desenvolvimento backend do sistema. 
 
-# Tecnologias usadas
+## Sobre as Branches
 
-    Spring - Java
-    Postgres - SQL
+- ### User
+
+        Nesta branch, foi criado o módulo de user, incluindo autenticação e regras de autorização, além de configurações de smtp, a fim de garantir maior segurança aos usuários. 
+
+## Tecnologias usadas
+
+- Spring - Java
+- Postgres - SQL
 
 # Configurações em localhost
 
@@ -19,37 +25,43 @@
     7 - No arquivo "application.properties", altere o seu username (e-mail) e password nas confirgurações de smtp. Veja como adicionar a senha correta do seu e-mail 
     de envio escolhido: https://support.google.com/accounts/answer/185833.    
 
-# Dependências implantadas
+## Dependências implantadas
 
-    Spring Web
-    Spring Data JPA
-    Lombok
-    Spring Boot DevTools
-    PostgreSQL Driver
-    Spring Security
-    Java Mail Sender
-    Validation
-    Java JWT
+- Spring Web
+- Spring Data JPA
+- Lombok
+- Spring Boot DevTools
+- PostgreSQL Driver
+- Spring Security
+- Java Mail Sender
+- Validation
+- Java JWT
 
-# Execução
+## Inicialização
 
-    [LINUX] Execute o comando para limpar e reconstruir o projeto spring no linux:
+- ### Instalação
 
-    mvn clean package
+        Antes de tudo, instale o JDK17 e o Maven na sua máquina. Siga o tutorial: https://www.treinaweb.com.br/blog/configurando-ambiente-de-desenvolvimento-spring-boot-no-windows
+
+- ### No Linux
+
+        Execute o comando para limpar e reconstruir o projeto spring no linux:
+
+        - mvn clean package
     
-    [LINUX] Execute o comando para rodar o projeto no linux:
+        Execute o comando para rodar o projeto no linux:
 
-    mvn spring-boot:run
+        - mvn spring-boot:run
         
-    ----------------------------------------------------------------------------------
+- ### No Windows
 
-    [WINDOWS] Execute o comando para limpar e reconstruir o projeto spring no windows:
-    
-    ./mvnw clean package
-    
-    [WINDOWS] Execute o comando para rodar o projeto no windows:
+        Execute o comando para limpar e reconstruir o projeto spring no windows:
+        
+        - ./mvnw clean package
+        
+        Execute o comando para rodar o projeto no windows:
 
-    ./mvnw spring-boot:run
+        - ./mvnw spring-boot:run
     
 # Endpoints
 
