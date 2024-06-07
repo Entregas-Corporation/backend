@@ -22,7 +22,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 public class UserController {
     private UserService userService;
 
@@ -75,8 +75,8 @@ public class UserController {
     }
 
     @PatchMapping("/update/role/{id}")
-    public UserSaveDto updateRole(@PathVariable String id, @RequestBody UserSaveDto saveUserDto) {
-        return userService.changeRole(id, saveUserDto);
+    public UserSaveDto updateRole(@PathVariable String id) {
+        return userService.changeRole(id);
     }
 
     @PostMapping("/register")

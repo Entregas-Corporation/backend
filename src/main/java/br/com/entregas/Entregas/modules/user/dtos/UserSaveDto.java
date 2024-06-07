@@ -2,7 +2,6 @@ package br.com.entregas.Entregas.modules.user.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.Collection;
@@ -20,7 +19,7 @@ public record UserSaveDto(
                 @NotBlank(groups = {
                                 GroupValidation.Create.class,
                                 GroupValidation.Login.class }) @Size(max = 255) @Email String email,
-                @NotNull(groups = GroupValidation.Create.class) Role role,
+                Role role,
                 String photo,
                 Boolean valid,
                 Boolean actived){
@@ -31,15 +30,11 @@ public record UserSaveDto(
                         case ADMIN:
                                 return List.of(
                                                 new SimpleGrantedAuthority("ROLE_ADMIN"),
-                                                new SimpleGrantedAuthority("ROLE_CUTOMER"),
-                                                new SimpleGrantedAuthority("ROLE_BUSINESSPERSON"));
+                                                new SimpleGrantedAuthority("ROLE_USER"));
 
-                        case BUSINESSPERSON:
-                                return List.of(new SimpleGrantedAuthority("ROLE_BUSINESSPERSON"),
-                                                new SimpleGrantedAuthority("ROLE_CUSTOMER"));
+                        case USER:
+                                return List.of(new SimpleGrantedAuthority("ROLE_USER"));
 
-                        case CUSTOMER:
-                                return List.of(new SimpleGrantedAuthority("ROLE_CUSTOMER"));
                         default:
                                 return List.of(new SimpleGrantedAuthority("ROLE_NENHUM"));
 

@@ -1,5 +1,6 @@
 package br.com.entregas.Entregas.modules.user.services;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -17,53 +18,54 @@ import br.com.entregas.Entregas.modules.user.dtos.UserDetailDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserPageDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserSaveDto;
 import br.com.entregas.Entregas.modules.user.dtos.mapper.UserMapper;
+import br.com.entregas.Entregas.modules.user.enums.Role;
 import br.com.entregas.Entregas.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    private UserRepository repository;
+    private UserMapper mapper;
     private TokenUserService tokenService;
     private SendEmailService sendEmailService;
 
     @Transactional
     public UserPageDto listValid(int page, int pageSize) {
-        Page<UserDetailDto> userPage = userRepository.findByValidTrue(PageRequest.of(page, pageSize))
-                .map(user -> userMapper.toDtoDetail(user));
+        Page<UserDetailDto> userPage = repository.findByValidTrue(PageRequest.of(page, pageSize))
+                .map(user -> mapper.toDtoDetail(user));
         return new UserPageDto(userPage.getContent(), userPage.getTotalElements(), userPage.getTotalPages());
     }
 
     @Transactional
     public UserPageDto listInvalid(int page, int pageSize) {
-        Page<UserDetailDto> userPage = userRepository.findByValidFalse(PageRequest.of(page, pageSize))
-                .map(user -> userMapper.toDtoDetail(user));
+        Page<UserDetailDto> userPage = repository.findByValidFalse(PageRequest.of(page, pageSize))
+                .map(user -> mapper.toDtoDetail(user));
         return new UserPageDto(userPage.getContent(), userPage.getTotalElements(), userPage.getTotalPages());
     }
 
     @Transactional
     public UserPageDto listInvalidByAdmin(int page, int pageSize) {
-        Page<UserDetailDto> userPage = userRepository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(user -> userMapper.toDtoDetail(user));
+        Page<UserDetailDto> userPage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
+                .map(user -> mapper.toDtoDetail(user));
         return new UserPageDto(userPage.getContent(), userPage.getTotalElements(), userPage.getTotalPages());
     }
 
     @Transactional
     public UserDetailDto detail(String id) {
-        return userRepository.findById(id).map(user -> userMapper.toDtoDetail(user))
+        return repository.findById(id).map(user -> mapper.toDtoDetail(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
 
     @Transactional
     public UserSaveDto save(UserSaveDto userDto) {
-        boolean emailUsed = userRepository.findByEmail(userMapper.toEntity(userDto).getEmail()).isPresent();
+        boolean emailUsed = repository.findByEmail(mapper.toEntity(userDto).getEmail()).isPresent();
         if (emailUsed) {
             throw new DomainException(ExceptionMessageConstant.attributeUsed("E-mail"));
         }
-        UserSaveDto newUserDto = new UserSaveDto(userDto.id(), userDto.name(), userDto.email(), userDto.role(),
+        UserSaveDto newUserDto = new UserSaveDto(userDto.id(), userDto.name(), userDto.email(), Role.USER,
                 userDto.photo(), false, true);
-        UserSaveDto saveUser = userMapper.toDto(userRepository.save(userMapper.toEntity(newUserDto)));
+        UserSaveDto saveUser = mapper.toDto(repository.save(mapper.toEntity(newUserDto)));
         sendEmailService.sendWellcomeAccount(saveUser);
         return saveUser;
 
@@ -71,8 +73,8 @@ public class UserService {
 
     @Transactional
     public UserTokenDto login(UserSaveDto userDto) {
-        Optional<UserSaveDto> user = userRepository.findByEmail(userMapper.toEntity(userDto).getEmail())
-                .map(u -> userMapper.toDto(u));
+        Optional<UserSaveDto> user = repository.findByEmail(mapper.toEntity(userDto).getEmail())
+                .map(u -> mapper.toDto(u));
         if (user == null || user.get().valid() == false) {
             throw new DomainException(ExceptionMessageConstant.invalidAuthentication);
         }
@@ -82,7 +84,7 @@ public class UserService {
 
     @Transactional
     public UserSaveDto updateByUser(String id, UserSaveDto saveUserDto) {
-        return userRepository.findById(id).map(recordFound -> {
+        return repository.findById(id).map(recordFound -> {
 
             if (saveUserDto.name() != null) {
                 recordFound.setName(saveUserDto.name());
@@ -90,30 +92,33 @@ public class UserService {
             if (saveUserDto.valid() != null && saveUserDto.valid() == false && recordFound.getValid() == true) {
                 recordFound.setValid(saveUserDto.valid());
             }
-            return userRepository.save(recordFound);
+            recordFound.setUpdated(LocalDateTime.now());
+            return repository.save(recordFound);
 
-        }).map(user -> userMapper.toDto(user))
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
 
     public UserSaveDto closeAccount(String id) {
-        return userRepository.findById(id).map(recordFound -> {
+        return repository.findById(id).map(recordFound -> {
             recordFound.setValid(false);
-            sendEmailService.sendDisableAccount(userMapper.toDto(recordFound));
-            return userRepository.save(recordFound);
+            sendEmailService.sendDisableAccount(mapper.toDto(recordFound));
+            recordFound.setUpdated(LocalDateTime.now());
+            return repository.save(recordFound);
 
-        }).map(user -> userMapper.toDto(user))
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
 
     @Transactional
     public String validateAccount(String id) {
-        UserSaveDto userSaveDto = userRepository.findById(id).map(recordFound -> {
+        UserSaveDto userSaveDto = repository.findById(id).map(recordFound -> {
             if (recordFound.getActived()) {
                 recordFound.setValid(true);
             }
-            return userRepository.save(recordFound);
-        }).map(user -> userMapper.toDto(user))
+            recordFound.setUpdated(LocalDateTime.now());
+            return repository.save(recordFound);
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
         if (userSaveDto.valid()) {
             sendEmailService.sendValidationAccount(userSaveDto);
@@ -124,34 +129,40 @@ public class UserService {
 
     @Transactional
     public UserSaveDto suspendAccount(String id) {
-        return userRepository.findById(id).map(recordFound -> {
+        return repository.findById(id).map(recordFound -> {
             recordFound.setValid(false);
             recordFound.setActived(false);
-            sendEmailService.sendDisableAccount(userMapper.toDto(recordFound));
-            return userRepository.save(recordFound);
-        }).map(user -> userMapper.toDto(user))
+            recordFound.setUpdated(LocalDateTime.now());
+            sendEmailService.sendDisableAccount(mapper.toDto(recordFound));
+            return repository.save(recordFound);
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
 
     @Transactional
     public UserSaveDto reactivateAccount(String id) {
-        return userRepository.findById(id).map(recordFound -> {
+        return repository.findById(id).map(recordFound -> {
             recordFound.setValid(true);
             recordFound.setActived(true);
-            sendEmailService.sendValidationAccount(userMapper.toDto(recordFound));
-            return userRepository.save(recordFound);
-        }).map(user -> userMapper.toDto(user))
+            sendEmailService.sendValidationAccount(mapper.toDto(recordFound));
+            recordFound.setUpdated(LocalDateTime.now());
+            return repository.save(recordFound);
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
 
     @Transactional
-    public UserSaveDto changeRole(String id, UserSaveDto saveUserDto) {
-        return userRepository.findById(id).map(recordFound -> {
-            if (saveUserDto.role() != null) {
-                recordFound.setRole(saveUserDto.role());
+    public UserSaveDto changeRole(String id) {
+        return repository.findById(id).map(recordFound -> {
+            if (recordFound.getRole() == Role.USER) {
+                recordFound.setRole(Role.ADMIN);
+            }else{
+                recordFound.setRole(Role.USER);
             }
-            return userRepository.save(recordFound);
-        }).map(user -> userMapper.toDto(user))
+            recordFound.setUpdated(LocalDateTime.now());
+            return repository.save(recordFound);
+        }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
     }
+
 }

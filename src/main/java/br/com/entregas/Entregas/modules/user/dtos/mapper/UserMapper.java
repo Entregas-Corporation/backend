@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 
 import br.com.entregas.Entregas.modules.user.dtos.UserDetailDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserSaveDto;
-import br.com.entregas.Entregas.modules.user.models.User;
+import br.com.entregas.Entregas.modules.user.models.UserModel;
 
 @Component
 public class UserMapper {
-    public UserSaveDto toDto(User user) {
+    public UserSaveDto toDto(UserModel user) {
         if (user == null) {
             return null;
         }
@@ -18,7 +18,7 @@ public class UserMapper {
                 user.getValid(), user.getActived());
     }
 
-    public UserDetailDto toDtoDetail(User user) {
+    public UserDetailDto toDtoDetail(UserModel user) {
         if (user == null) {
             return null;
         }
@@ -26,12 +26,12 @@ public class UserMapper {
                 user.getCreated(), user.getUpdated());
     }
 
-    public User toEntity(UserSaveDto userDto) {
+    public UserModel toEntity(UserSaveDto userDto) {
         if (userDto == null) {
             return null;
         }
 
-        User user = new User();
+        UserModel user = new UserModel();
 
         if (userDto.id() != null) {
             user.setId(userDto.id());
@@ -43,7 +43,6 @@ public class UserMapper {
         user.setValid(userDto.valid());
         user.setActived(userDto.actived());
         user.setUpdated(LocalDateTime.now());
-
         return user;
     }
 

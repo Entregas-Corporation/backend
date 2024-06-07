@@ -26,7 +26,7 @@ import br.com.entregas.Entregas.modules.user.enums.Role;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class User {
+public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
@@ -47,7 +47,7 @@ public class User {
     @Column(name = "photo")
     private String photo;
 
-    @NotNull(groups = GroupValidation.Create.class)
+
     @Column(name = "nivel", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;

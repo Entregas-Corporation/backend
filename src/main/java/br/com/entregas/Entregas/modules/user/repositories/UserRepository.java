@@ -5,14 +5,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import br.com.entregas.Entregas.modules.user.models.User;
+import br.com.entregas.Entregas.modules.user.models.UserModel;
 
 import java.util.Optional;
 
 @CrossOrigin(origins = "*")
-public interface UserRepository extends JpaRepository<User, String> {
-    Optional<User> findByEmail(String email);
-    Page<User> findByValidTrue(Pageable pageable);
-    Page<User> findByValidFalse(Pageable pageable);
-    Page<User> findByActivedFalse(Pageable pageable);   
+public interface UserRepository extends JpaRepository<UserModel, String> {
+    Optional<UserModel> findByEmail(String email);
+    Page<UserModel> findByValidTrue(Pageable pageable);
+    Page<UserModel> findByValidFalse(Pageable pageable);
+    Page<UserModel> findByActivedFalse(Pageable pageable);   
 }

@@ -1,7 +1,7 @@
 package br.com.entregas.Entregas.core.constants;
 
 public final class SendEmailMessageConstant {
-    public static final String linkValidate = "http://localhost:8080/usuario/validate/account/";
+    public static final String linkValidate = "http://localhost:8080/user/validate/account/";
 
     public static final String successfullValidation = "Parabéns! Sua conta foi validada e você já pode fazer login no sistema.";
 
