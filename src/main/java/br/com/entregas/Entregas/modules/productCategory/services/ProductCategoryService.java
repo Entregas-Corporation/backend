@@ -48,7 +48,7 @@ public class ProductCategoryService {
     }
 
     @Transactional
-    public ProductCategorySaveDto save(ProductCategorySaveDto productCategory) {
+    public ProductCategoryDetailDto save(ProductCategorySaveDto productCategory) {
         boolean nameUsed = repository.findByName(mapper.toEntity(productCategory).getName()).isPresent();
         if (nameUsed) {
             throw new DomainException(ExceptionMessageConstant.attributeUsed("Nome"));
@@ -58,12 +58,12 @@ public class ProductCategoryService {
                 productCategory.name(),
                 true);
 
-        return mapper.toDto(repository.save(mapper.toEntity(newProductCategory)));
+        return mapper.toDtoDetail(repository.save(mapper.toEntity(newProductCategory)));
     }
 
     @Transactional
-    public ProductCategorySaveDto update(ProductCategorySaveDto productCategory, String id) {
-        return repository.findById(id).map(recordFound -> {
+    public ProductCategoryDetailDto update(ProductCategorySaveDto productCategory, String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             if (productCategory.name() != null) {
                 if (repository.findByName(mapper.toEntity(productCategory).getName()).isPresent()) {
                     throw new DomainException(ExceptionMessageConstant.attributeUsed("Nome"));
@@ -74,17 +74,17 @@ public class ProductCategoryService {
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
         }).map(inst -> mapper.toDto(inst))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Categoria de Produto")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Categoria de Produto")))));
     }
 
     @Transactional
-    public ProductCategorySaveDto toggleActivity(String id) {
-        return repository.findById(id)
+    public ProductCategoryDetailDto toggleActivity(String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id)
                 .map(recordFound -> {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
                     return repository.save(recordFound);
                 }).map(productCategory -> mapper.toDto(productCategory))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Categoria de Produto")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Categoria de Produto")))));
     }
 }

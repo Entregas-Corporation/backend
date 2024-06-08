@@ -33,6 +33,7 @@ public class ProductCategoryModel {
     @Column(name = "nome", length = 255, nullable = false, unique = true)
     private String name;
 
+    @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "ativo", nullable = false)
     private Boolean actived;
 

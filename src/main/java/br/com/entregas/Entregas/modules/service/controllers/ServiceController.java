@@ -1,4 +1,4 @@
-package br.com.entregas.Entregas.modules.institute.controllers;
+package br.com.entregas.Entregas.modules.service.controllers;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,65 +11,68 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
-import br.com.entregas.Entregas.modules.institute.dtos.InstituteDetailDto;
-import br.com.entregas.Entregas.modules.institute.dtos.InstitutePageDto;
-import br.com.entregas.Entregas.modules.institute.dtos.InstituteSaveDto;
-import br.com.entregas.Entregas.modules.institute.services.InstituteService;
+import br.com.entregas.Entregas.modules.service.dtos.ServiceDetailDto;
+import br.com.entregas.Entregas.modules.service.dtos.ServicePageDto;
+import br.com.entregas.Entregas.modules.service.dtos.ServiceSaveDto;
+import br.com.entregas.Entregas.modules.service.services.ServiceService;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/institute")
+@RequestMapping("/service")
 @AllArgsConstructor
-public class InstituteController {
-    private InstituteService service;
+public class ServiceController {
+    private ServiceService service;
 
     @GetMapping("/list/valid")
-    public InstitutePageDto findAllInstituteValid(
+    public ServicePageDto findAllServiceValid(
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive int pageSize) {
         return service.listValid(page, pageSize);
     }
 
     @GetMapping("/list/invalid")
-    public InstitutePageDto findAllInstituteInvalid(
+    public ServicePageDto findAllServiceInvalid(
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive int pageSize) {
         return service.listInvalid(page, pageSize);
     }
 
-    @GetMapping("/list/user/valid/{id}")
-    public InstitutePageDto findAllInstituteValidByUser(@PathVariable String id,
+    @GetMapping("/list/institute/valid/{id}")
+    public ServicePageDto findAllServiceValidByInstitute(
+            @PathVariable String id,
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive int pageSize) {
-        return service.listValidByUser(id, page, pageSize);
+        return service.listValidByInstitute(id, page, pageSize);
     }
 
-    @GetMapping("/list/user/invalid/{id}")
-    public InstitutePageDto findAllInstituteInvalidByUser(@PathVariable String id,
+    @GetMapping("/list/institute/invalid/{id}")
+    public ServicePageDto findAllServiceInvalidByInstitute(
+            @PathVariable String id,
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive int pageSize) {
-        return service.listInvalidByUser(id, page, pageSize);
+        return service.listInvalidByInstitute(id, page, pageSize);
     }
 
     @GetMapping("/detail/{id}")
-    public InstituteDetailDto findOneInstitute(@PathVariable String id){
+    public ServiceDetailDto findOneService(@PathVariable String id) {
         return service.detail(id);
     }
 
     @PostMapping("/register")
-    public InstituteDetailDto registerOneInstitute(@Validated(GroupValidation.Create.class) @RequestBody InstituteSaveDto institute){
-        return service.save(institute);
+    public ServiceDetailDto registerOneService(
+            @Validated(GroupValidation.Create.class) @RequestBody ServiceSaveDto newService) {
+        return service.save(newService);
     }
 
     @PatchMapping("/update/{id}")
-    public InstituteDetailDto patchOneInstitute(@RequestBody InstituteSaveDto institute, @PathVariable String id){
-        return service.update(institute, id);
+    public ServiceDetailDto patchOneService(@RequestBody ServiceSaveDto newService, @PathVariable String id) {
+        return service.update(newService, id);
     }
 
     @PatchMapping("/toggle/activity/{id}")
-    public InstituteDetailDto patchActivedByOneInstitute(@PathVariable String id){
+    public ServiceDetailDto patchActivedByOneService(@PathVariable String id) {
         return service.toggleActivity(id);
     }
 

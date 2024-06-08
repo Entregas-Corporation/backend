@@ -37,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "user/update/role/**").hasAnyRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "institute/register").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "institute/list/valid/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "institute/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "institute/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "institute/list/user/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "institute/list/user/invalid/**").hasAnyRole("USER")
@@ -51,6 +51,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "product-category/detail/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product-category/update/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product-category/toggle/activity/**").hasAnyRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "service/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "service/list/institute/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "service/list/institute/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "service/list/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "service/list/invalid/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "service/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "service/update/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "service/toggle/activity/**").hasAnyRole("USER")
                 )
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)
                 .build();

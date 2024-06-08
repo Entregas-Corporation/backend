@@ -21,7 +21,7 @@ public class InstituteMapper {
         if (institute == null) {
             return null;
         }
-        return new InstituteDetailDto(institute.getId(), institute.getName(), institute.getDescription(), institute.getImage(), institute.getCity(), institute.getLongitude(), institute.getLatitude(), institute.getWhatsapp(), institute.getFreight_cost_km(), institute.getCreated(), institute.getUpdated());
+        return new InstituteDetailDto(institute.getId(), institute.getName(), institute.getDescription(), institute.getImage(), institute.getCity(), institute.getLongitude(), institute.getLatitude(), institute.getWhatsapp(), institute.getFreight_cost_km(), institute.getUser().getId(), institute.getCreated(), institute.getUpdated());
     }
 
     public InstituteModel toEntity(InstituteSaveDto instituteDto) {

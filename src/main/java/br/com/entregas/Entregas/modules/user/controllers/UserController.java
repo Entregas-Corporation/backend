@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PatchMapping("/update/user/{id}")
-    public UserSaveDto updateUser(@PathVariable String id, @RequestBody UserSaveDto saveUserDto) {
+    public UserDetailDto updateUser(@PathVariable String id, @RequestBody UserSaveDto saveUserDto) {
         return userService.updateByUser(id, saveUserDto);
     }
 
@@ -65,22 +65,22 @@ public class UserController {
     }
 
     @PatchMapping("/suspense/account/{id}")
-    public UserSaveDto suspenseAccount(@PathVariable String id) {
+    public UserDetailDto suspenseAccount(@PathVariable String id) {
         return userService.suspendAccount(id);
     }
 
     @PatchMapping("/reactivate/account/{id}")
-    public UserSaveDto reactivateAccount(@PathVariable String id) {
+    public UserDetailDto reactivateAccount(@PathVariable String id) {
         return userService.reactivateAccount(id);
     }
 
     @PatchMapping("/update/role/{id}")
-    public UserSaveDto updateRole(@PathVariable String id) {
+    public UserDetailDto updateRole(@PathVariable String id) {
         return userService.changeRole(id);
     }
 
     @PostMapping("/register")
-    public UserSaveDto registerUser(@Validated(GroupValidation.Create.class) @RequestBody UserSaveDto userDto) {
+    public UserDetailDto registerUser(@Validated(GroupValidation.Create.class) @RequestBody UserSaveDto userDto) {
         return userService.save(userDto);
     }
 

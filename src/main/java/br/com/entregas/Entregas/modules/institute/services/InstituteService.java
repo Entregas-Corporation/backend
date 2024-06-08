@@ -45,7 +45,7 @@ public class InstituteService {
                     if (institute.getUser().getId().equals(idUser)) {
                         return mapper.toDtoDetail(institute);
                     }
-                    return null;
+                    throw new DomainException(ExceptionMessageConstant.notFound("Usuário"));
                 });
         return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
                 institutePage.getTotalPages());
@@ -58,7 +58,7 @@ public class InstituteService {
                     if (institute.getUser().getId().equals(idUser)) {
                         return mapper.toDtoDetail(institute);
                     }
-                    return null;
+                    throw new DomainException(ExceptionMessageConstant.notFound("Usuário"));
                 });
         return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
                 institutePage.getTotalPages());
@@ -72,7 +72,7 @@ public class InstituteService {
     }
 
     @Transactional
-    public InstituteSaveDto save(InstituteSaveDto institute) {
+    public InstituteDetailDto save(InstituteSaveDto institute) {
         boolean whatsappUsed = repository.findByWhatsapp(mapper.toEntity(institute).getWhatsapp()).isPresent();
         if (whatsappUsed) {
             throw new DomainException(ExceptionMessageConstant.attributeUsed("Whatsapp"));
@@ -89,12 +89,12 @@ public class InstituteService {
                 institute.freight_cost_km(),
                 institute.user(),
                 true);
-        return mapper.toDto(repository.save(mapper.toEntity(newInstitue)));
+        return mapper.toDtoDetail(repository.save(mapper.toEntity(newInstitue)));
     }
 
     @Transactional
-    public InstituteSaveDto update(InstituteSaveDto institute, String id) {
-        return repository.findById(id).map(recordFound -> {
+    public InstituteDetailDto update(InstituteSaveDto institute, String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             if (institute.name() != null) {
                 recordFound.setName(institute.name());
             }
@@ -126,17 +126,17 @@ public class InstituteService {
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
         }).map(inst -> mapper.toDto(inst))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")))));
     }
 
     @Transactional
-    public InstituteSaveDto toggleActivity(String id) {
-        return repository.findById(id)
+    public InstituteDetailDto toggleActivity(String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id)
                 .map(recordFound -> {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
                     return repository.save(recordFound);
                 }).map(institute -> mapper.toDto(institute))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")))));
     }
 }

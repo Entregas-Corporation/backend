@@ -46,17 +46,17 @@ public class ProductCategoryController {
     }
 
     @PostMapping("/register")
-    public ProductCategorySaveDto registerOneProductCategory(@Validated(GroupValidation.Create.class) @RequestBody ProductCategorySaveDto productCategory){
+    public ProductCategoryDetailDto registerOneProductCategory(@Validated(GroupValidation.Create.class) @RequestBody ProductCategorySaveDto productCategory){
         return service.save(productCategory);
     }
 
     @PatchMapping("/update/{id}")
-    public ProductCategorySaveDto patchOneProductCategory(@RequestBody ProductCategorySaveDto productCategory, @PathVariable String id){
+    public ProductCategoryDetailDto patchOneProductCategory(@RequestBody ProductCategorySaveDto productCategory, @PathVariable String id){
         return service.update(productCategory, id);
     }
 
     @PatchMapping("/toggle/activity/{id}")
-    public ProductCategorySaveDto patchActivedByOneProductCategory(@PathVariable String id){
+    public ProductCategoryDetailDto patchActivedByOneProductCategory(@PathVariable String id){
         return service.toggleActivity(id);
     }
 

@@ -78,6 +78,7 @@ public class InstituteModel {
     @JsonProperty(access = Access.WRITE_ONLY)
     private UserModel user;
     
+    @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "ativo", nullable = false)
     private Boolean actived;
 

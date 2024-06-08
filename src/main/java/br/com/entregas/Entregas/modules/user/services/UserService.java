@@ -58,7 +58,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserSaveDto save(UserSaveDto userDto) {
+    public UserDetailDto save(UserSaveDto userDto) {
         boolean emailUsed = repository.findByEmail(mapper.toEntity(userDto).getEmail()).isPresent();
         if (emailUsed) {
             throw new DomainException(ExceptionMessageConstant.attributeUsed("E-mail"));
@@ -67,7 +67,8 @@ public class UserService {
                 userDto.photo(), false, true);
         UserSaveDto saveUser = mapper.toDto(repository.save(mapper.toEntity(newUserDto)));
         sendEmailService.sendWellcomeAccount(saveUser);
-        return saveUser;
+        UserDetailDto user = mapper.toDtoDetail(mapper.toEntity(saveUser));
+        return user;
 
     }
 
@@ -83,8 +84,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserSaveDto updateByUser(String id, UserSaveDto saveUserDto) {
-        return repository.findById(id).map(recordFound -> {
+    public UserDetailDto updateByUser(String id, UserSaveDto saveUserDto) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
 
             if (saveUserDto.name() != null) {
                 recordFound.setName(saveUserDto.name());
@@ -93,10 +94,11 @@ public class UserService {
                 recordFound.setValid(saveUserDto.valid());
             }
             recordFound.setUpdated(LocalDateTime.now());
+            
             return repository.save(recordFound);
 
         }).map(user -> mapper.toDto(user))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
     }
 
     public UserSaveDto closeAccount(String id) {
@@ -128,41 +130,41 @@ public class UserService {
     }
 
     @Transactional
-    public UserSaveDto suspendAccount(String id) {
-        return repository.findById(id).map(recordFound -> {
+    public UserDetailDto suspendAccount(String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             recordFound.setValid(false);
             recordFound.setActived(false);
             recordFound.setUpdated(LocalDateTime.now());
             sendEmailService.sendDisableAccount(mapper.toDto(recordFound));
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
     }
 
     @Transactional
-    public UserSaveDto reactivateAccount(String id) {
-        return repository.findById(id).map(recordFound -> {
+    public UserDetailDto reactivateAccount(String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             recordFound.setValid(true);
             recordFound.setActived(true);
             sendEmailService.sendValidationAccount(mapper.toDto(recordFound));
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
     }
 
     @Transactional
-    public UserSaveDto changeRole(String id) {
-        return repository.findById(id).map(recordFound -> {
+    public UserDetailDto changeRole(String id) {
+        return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             if (recordFound.getRole() == Role.USER) {
                 recordFound.setRole(Role.ADMIN);
-            }else{
+            } else {
                 recordFound.setRole(Role.USER);
             }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
-                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")));
+                .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
     }
 
 }
