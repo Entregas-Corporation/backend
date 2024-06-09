@@ -60,6 +60,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "service/detail/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "service/update/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "service/toggle/activity/**").hasAnyRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "product/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/institute/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/institute/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/product-category/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/product-category/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/institute/product-category/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/invalid/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "product/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "product/update/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "product/toggle/activity/**").hasAnyRole("USER")
                 )
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)
                 .build();
