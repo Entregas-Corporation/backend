@@ -10,6 +10,10 @@ public final class SendEmailMessageConstant {
     public static final String titleSuccessfullValidation = "Conta ativada com sucesso no Entregas!";
     
     public static final String titleDisableAccount = "Conta desativada no Entregas!";
+
+    public static final String titleTreatmentComplaint = "Denúncia Recebida!";
+
+    public static final String titleTreatmentSupport = "Mensagem Recebida!";
     
     public static final String textWellcome(String id_user, String username) {
         return "Olá, "+username+"! Sua conta está quase concluída."+
@@ -30,6 +34,22 @@ public final class SendEmailMessageConstant {
 
     public static final String textDisableAccount(String username) {
         return "Olá, "+username+"! Sua conta foi desativada no sistema."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textTreatmentSupport(String username) {
+        return "Olá, "+username+"! Sua mensagem foi recebida em nosso sistema."+
+        "\nAgora basta aguardar a nossa resposta perante ao atendimento realizado."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textTreatmentComplaint(String username) {
+        return "Olá, "+username+"! Sua reclamação foi recebida em nosso sistema."+
+        "\nAgora basta aguardar a nossa resposta perante ao atendimento realizado."+
         "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
         "\n\nAtenciosamente,"+
         "\nSuporte Entregas.";

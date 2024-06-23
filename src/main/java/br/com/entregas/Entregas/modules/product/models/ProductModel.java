@@ -23,7 +23,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "product")
+@Table(name = "produto")
 @Entity
 @Getter
 @Setter

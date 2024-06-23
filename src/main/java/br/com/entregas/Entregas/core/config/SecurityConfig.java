@@ -66,13 +66,26 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "product/list/institute/invalid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/product-category/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/product-category/invalid/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "product/list/institute/product-category/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/list/institute/product-category/valid/**")
+                        .hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "product/detail/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product/update/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product/toggle/activity/**").hasAnyRole("USER")
+
+                        .requestMatchers(HttpMethod.POST, "treatment/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/support/resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/support/not-resolved**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/complaint/resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/complaint/not-resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/institute/resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/list/institute/not-resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/detail/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "treatment/toggle/status-resolved/**").hasAnyRole("ADMIN")
+
                 )
+
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -14,4 +14,5 @@ public interface InstituteRepository extends JpaRepository<InstituteModel, Strin
     Page<InstituteModel> findByActivedTrue(Pageable pageable);
     Page<InstituteModel> findByActivedFalse(Pageable pageable);
     Optional<InstituteModel> findByWhatsapp(String whatsapp);
+    Optional<InstituteModel> findByName(String whatsapp);
 }

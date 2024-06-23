@@ -1,4 +1,4 @@
-package br.com.entregas.Entregas.modules.institute.models;
+package br.com.entregas.Entregas.modules.treatment.models;
 
 import java.time.LocalDateTime;
 
@@ -6,9 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
+import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
+import br.com.entregas.Entregas.modules.treatment.enums.TreatmentType;
 import br.com.entregas.Entregas.modules.user.models.UserModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,63 +27,45 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-@Table(name = "estabelecimento")
+@Table(name = "atendimento")
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class InstituteModel {
+public class TreatmentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
-    @Column(name = "id_estabelecimento")
+    @Column(name = "id_atendimento")
     private String id;
 
     @NotBlank(groups = GroupValidation.Create.class)
     @Size(max = 255)
-    @Column(name = "nome", length = 255, nullable = false, unique = true)
-    private String name;
+    @Column(name = "titulo", length = 255, nullable = false)
+    private String title;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "descricao", nullable = false)
-    private String description;
+    @Column(name = "assunto", nullable = false)
+    private String subject;
     
-    @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "imagem", nullable = false)
-    private String image;
-
-    @NotBlank(groups = {GroupValidation.Create.class})
-    @Size(max = 255)
-    @Column(name = "cidade", length = 255, nullable = false)
-    private String city;
-
-    @NotBlank(groups = {GroupValidation.Create.class})
-    @Size(max = 255)
-    @Column(name = "longitude", length = 255, nullable = false)
-    private String longitude;
-
-    @NotBlank(groups = {GroupValidation.Create.class})
-    @Size(max = 255)
-    @Column(name = "latitude", length = 255, nullable = false)
-    private String latitude;
-
-    @NotBlank(groups = {GroupValidation.Create.class})
-    @Size(max = 11)
-    @Column(name = "whatsapp", length = 11, nullable = false, unique = true)
-    private String whatsapp;
-
-    @NotNull(groups = {GroupValidation.Create.class})
-    @Column(name = "valor_frete_km", nullable = false)
-    private Double freight_cost_km;
+    @Enumerated(EnumType.STRING)
+    @NotNull(groups = GroupValidation.Create.class)
+    @Column(name = "tipo_atendimento", nullable = false)
+    private TreatmentType type;
 
     @NotNull(groups = {GroupValidation.Create.class})
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "remetente", nullable = false)
     @JsonProperty(access = Access.WRITE_ONLY)
-    private UserModel user;
+    private UserModel sender;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "id_estabelecimento", nullable = true)
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private InstituteModel institute;
     
     @NotNull(groups = GroupValidation.Create.class)
-    @Column(name = "ativo", nullable = false)
+    @Column(name = "resolvido", nullable = false)
     private Boolean actived;
 
     @NotNull(groups = GroupValidation.Create.class)
@@ -89,6 +75,4 @@ public class InstituteModel {
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "alterado", nullable = false)
     private LocalDateTime updated;
-
-
 }

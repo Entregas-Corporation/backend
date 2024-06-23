@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.entregas.Entregas.core.constants.SendEmailMessageConstant;
 import br.com.entregas.Entregas.core.dtos.sendEmail.SendEmailDto;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
+import br.com.entregas.Entregas.modules.user.dtos.UserDetailDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserSaveDto;
 import lombok.AllArgsConstructor;
 
@@ -33,22 +34,41 @@ public class SendEmailService {
     @Transactional
     public void sendWellcomeAccount(UserSaveDto userSaveDto) {
         SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", userSaveDto.email(),
-                SendEmailMessageConstant.titleWellcome, SendEmailMessageConstant.textWellcome(userSaveDto.id(), userSaveDto.name()));
+                SendEmailMessageConstant.titleWellcome,
+                SendEmailMessageConstant.textWellcome(userSaveDto.id(), userSaveDto.name()));
         sendEmail(sendEmailDto);
     }
 
     @Transactional
     public void sendValidationAccount(UserSaveDto userSaveDto) {
         SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", userSaveDto.email(),
-                SendEmailMessageConstant.titleSuccessfullValidation, SendEmailMessageConstant.textSuccessfullValidation(userSaveDto.name()));
+                SendEmailMessageConstant.titleSuccessfullValidation,
+                SendEmailMessageConstant.textSuccessfullValidation(userSaveDto.name()));
         sendEmail(sendEmailDto);
     }
 
     @Transactional
     public void sendDisableAccount(UserSaveDto userSaveDto) {
         SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", userSaveDto.email(),
-                SendEmailMessageConstant.titleDisableAccount, SendEmailMessageConstant.textDisableAccount(userSaveDto.name()));
+                SendEmailMessageConstant.titleDisableAccount,
+                SendEmailMessageConstant.textDisableAccount(userSaveDto.name()));
         sendEmail(sendEmailDto);
     }
 
+
+    @Transactional
+    public void sendTreatmentBySupport(UserDetailDto userSaveDto) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", userSaveDto.email(),
+                SendEmailMessageConstant.titleTreatmentSupport,
+                SendEmailMessageConstant.textTreatmentSupport(userSaveDto.name()));
+        sendEmail(sendEmailDto);
+    }
+
+    @Transactional
+    public void sendTreatmentByComplaint(UserDetailDto userSaveDto) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", userSaveDto.email(),
+                SendEmailMessageConstant.titleTreatmentComplaint,
+                SendEmailMessageConstant.textTreatmentComplaint(userSaveDto.name()));
+        sendEmail(sendEmailDto);
+    }
 }
