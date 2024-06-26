@@ -23,7 +23,9 @@ public class ProductMapper {
                 product.getQuantity(),
                 product.getInstitute(),
                 product.getCategory(),
-                product.getActived());
+                product.getActived(),
+                product.getValid()
+                );
     }
 
     public ProductDetailDto toDtoDetail(ProductModel product) {
@@ -61,6 +63,7 @@ public class ProductMapper {
         product.setInstitute(productDto.institute());
         product.setCategory(productDto.category());
         product.setActived(productDto.actived());
+        product.setValid(productDto.valid());
         product.setUpdated(LocalDateTime.now());
 
         return product;

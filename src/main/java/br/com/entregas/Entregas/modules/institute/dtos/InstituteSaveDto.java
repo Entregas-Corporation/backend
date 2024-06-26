@@ -18,5 +18,7 @@ public record InstituteSaveDto(
       @NotBlank(groups = { GroupValidation.Create.class }) @Size(max = 11) String whatsapp,
       @NotNull(groups = { GroupValidation.Create.class }) Double freight_cost_km,
       @NotNull(groups = { GroupValidation.Create.class }) UserModel user,
-      Boolean actived){
+      Boolean actived,
+      Boolean valid
+      ){
 }

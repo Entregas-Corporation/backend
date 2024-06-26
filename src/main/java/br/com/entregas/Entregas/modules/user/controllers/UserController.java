@@ -59,22 +59,22 @@ public class UserController {
         return userService.updateByUser(id, saveUserDto);
     }
 
-    @PatchMapping("/close/account/{id}")
+    @GetMapping("/close/account/{id}")
     public UserSaveDto closeAccountUser(@PathVariable String id) {
         return userService.closeAccount(id);
     }
 
-    @PatchMapping("/suspense/account/{id}")
+    @GetMapping("/suspense/account/{id}")
     public UserDetailDto suspenseAccount(@PathVariable String id) {
         return userService.suspendAccount(id);
     }
 
-    @PatchMapping("/reactivate/account/{id}")
+    @GetMapping("/reactivate/account/{id}")
     public UserDetailDto reactivateAccount(@PathVariable String id) {
         return userService.reactivateAccount(id);
     }
 
-    @PatchMapping("/update/role/{id}")
+    @GetMapping("/update/role/{id}")
     public UserDetailDto updateRole(@PathVariable String id) {
         return userService.changeRole(id);
     }

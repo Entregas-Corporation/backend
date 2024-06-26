@@ -1,8 +1,11 @@
 package br.com.entregas.Entregas.modules.institute.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,8 @@ import br.com.entregas.Entregas.modules.institute.dtos.InstitutePageDto;
 import br.com.entregas.Entregas.modules.institute.dtos.InstituteSaveDto;
 import br.com.entregas.Entregas.modules.institute.dtos.mapper.InstituteMapper;
 import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
+import br.com.entregas.Entregas.modules.product.repositories.ProductRepository;
+import br.com.entregas.Entregas.modules.service.repositories.ServiceRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -21,47 +26,58 @@ import lombok.AllArgsConstructor;
 public class InstituteService {
     private InstituteRepository repository;
     private InstituteMapper mapper;
+    private ServiceRepository serviceRepository;
+    private ProductRepository productRepository;
+
+    public InstitutePageDto pageableInstitute(int page, int pageSize, List<InstituteDetailDto> instituteList) {
+
+        int startIndex = page * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, instituteList.size());
+
+        List<InstituteDetailDto> pageContent = instituteList.subList(startIndex, endIndex);
+
+        Page<InstituteDetailDto> institutePage = new PageImpl<>(pageContent, PageRequest.of(page, pageSize),
+                instituteList.size());
+
+        return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
+                institutePage.getTotalPages());
+    }
 
     @Transactional
     public InstitutePageDto listValid(int page, int pageSize) {
-        Page<InstituteDetailDto> institutePage = repository.findByActivedTrue(PageRequest.of(page, pageSize))
-                .map(institute -> mapper.toDtoDetail(institute));
-        return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
-                institutePage.getTotalPages());
+
+        List<InstituteDetailDto> instituteList = repository.findAll().stream()
+                .filter(institute -> institute.getActived().equals(true) && institute.getValid().equals(true))
+                .map(institute -> mapper.toDtoDetail(institute)).collect(Collectors.toList());
+
+        return pageableInstitute(page, pageSize, instituteList);
     }
 
     @Transactional
     public InstitutePageDto listInvalid(int page, int pageSize) {
-        Page<InstituteDetailDto> institutePage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(institute -> mapper.toDtoDetail(institute));
-        return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
-                institutePage.getTotalPages());
+        List<InstituteDetailDto> instituteList = repository.findAll().stream()
+                .filter(institute -> institute.getActived().equals(false) && institute.getValid().equals(true))
+                .map(institute -> mapper.toDtoDetail(institute)).collect(Collectors.toList());
+
+        return pageableInstitute(page, pageSize, instituteList);
     }
 
     @Transactional
     public InstitutePageDto listValidByUser(String idUser, int page, int pageSize) {
-        Page<InstituteDetailDto> institutePage = repository.findByActivedTrue(PageRequest.of(page, pageSize))
-                .map(institute -> {
-                    if (institute.getUser().getId().equals(idUser)) {
-                        return mapper.toDtoDetail(institute);
-                    }
-                    throw new DomainException(ExceptionMessageConstant.notFound("Usuário"));
-                });
-        return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
-                institutePage.getTotalPages());
+        List<InstituteDetailDto> instituteList = repository.findByUserId(idUser).stream()
+                .filter(institute -> institute.getUser().getId().equals(idUser) && institute.getActived().equals(true))
+                .map(institute -> mapper.toDtoDetail(institute)).collect(Collectors.toList());
+
+        return pageableInstitute(page, pageSize, instituteList);
     }
 
     @Transactional
     public InstitutePageDto listInvalidByUser(String idUser, int page, int pageSize) {
-        Page<InstituteDetailDto> institutePage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(institute -> {
-                    if (institute.getUser().getId().equals(idUser)) {
-                        return mapper.toDtoDetail(institute);
-                    }
-                    throw new DomainException(ExceptionMessageConstant.notFound("Usuário"));
-                });
-        return new InstitutePageDto(institutePage.getContent(), institutePage.getTotalElements(),
-                institutePage.getTotalPages());
+        List<InstituteDetailDto> instituteList = repository.findByUserId(idUser).stream()
+                .filter(institute -> institute.getUser().getId().equals(idUser) && institute.getActived().equals(false))
+                .map(institute -> mapper.toDtoDetail(institute)).collect(Collectors.toList());
+
+        return pageableInstitute(page, pageSize, instituteList);
     }
 
     @Transactional
@@ -92,6 +108,7 @@ public class InstituteService {
                 institute.whatsapp(),
                 institute.freight_cost_km(),
                 institute.user(),
+                true,
                 true);
         return mapper.toDtoDetail(repository.save(mapper.toEntity(newInstitue)));
     }
@@ -143,6 +160,12 @@ public class InstituteService {
                 .map(recordFound -> {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
+                    for (int i = 0; i < recordFound.getServices().size(); i++) {
+                        serviceRepository.save(recordFound.getServices().get(i)).setValid(!recordFound.getServices().get(i).getValid());
+                    }
+                    for (int i = 0; i < recordFound.getProducts().size(); i++) {
+                        productRepository.save(recordFound.getProducts().get(i)).setValid(!recordFound.getProducts().get(i).getValid());
+                    }
                     return repository.save(recordFound);
                 }).map(institute -> mapper.toDto(institute))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")))));

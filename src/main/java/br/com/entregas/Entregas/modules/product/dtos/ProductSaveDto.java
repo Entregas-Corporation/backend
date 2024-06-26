@@ -16,5 +16,7 @@ public record ProductSaveDto(
             @NotNull(groups = {GroupValidation.Create.class}) Integer quantity,
             @NotNull(groups = {GroupValidation.Create.class}) InstituteModel institute,
             @NotNull(groups = {GroupValidation.Create.class}) ProductCategoryModel category,
-            Boolean actived) {
+            Boolean actived,
+            Boolean valid
+            ) {
 }

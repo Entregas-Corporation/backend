@@ -1,6 +1,7 @@
 package br.com.entregas.Entregas.modules.user.services;
 
 import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import br.com.entregas.Entregas.core.dtos.token.user.UserTokenDto;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
 import br.com.entregas.Entregas.core.services.sendEmail.SendEmailService;
 import br.com.entregas.Entregas.core.services.token.user.TokenUserService;
+
+import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
 import br.com.entregas.Entregas.modules.user.dtos.UserDetailDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserPageDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserSaveDto;
@@ -29,6 +32,8 @@ public class UserService {
     private UserMapper mapper;
     private TokenUserService tokenService;
     private SendEmailService sendEmailService;
+    private InstituteRepository instituteRepository;
+
 
     @Transactional
     public UserPageDto listValid(int page, int pageSize) {
@@ -106,6 +111,9 @@ public class UserService {
             recordFound.setValid(false);
             sendEmailService.sendDisableAccount(mapper.toDto(recordFound));
             recordFound.setUpdated(LocalDateTime.now());
+            for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
+                instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(false);
+            }
             return repository.save(recordFound);
 
         }).map(user -> mapper.toDto(user))
@@ -117,6 +125,9 @@ public class UserService {
         UserSaveDto userSaveDto = repository.findById(id).map(recordFound -> {
             if (recordFound.getActived()) {
                 recordFound.setValid(true);
+                for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
+                    instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(true);
+                }
             }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
@@ -136,6 +147,9 @@ public class UserService {
             recordFound.setActived(false);
             recordFound.setUpdated(LocalDateTime.now());
             sendEmailService.sendDisableAccount(mapper.toDto(recordFound));
+            for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
+                instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(false);
+            }
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
@@ -148,6 +162,9 @@ public class UserService {
             recordFound.setActived(true);
             sendEmailService.sendValidationAccount(mapper.toDto(recordFound));
             recordFound.setUpdated(LocalDateTime.now());
+            for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
+                instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(true);
+            }
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));

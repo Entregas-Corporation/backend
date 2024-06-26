@@ -55,7 +55,7 @@ public class ProductCategoryController {
         return service.update(productCategory, id);
     }
 
-    @PatchMapping("/toggle/activity/{id}")
+    @GetMapping("/toggle/activity/{id}")
     public ProductCategoryDetailDto patchActivedByOneProductCategory(@PathVariable String id){
         return service.toggleActivity(id);
     }

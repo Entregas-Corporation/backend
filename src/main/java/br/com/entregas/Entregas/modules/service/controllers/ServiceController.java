@@ -71,7 +71,7 @@ public class ServiceController {
         return service.update(newService, id);
     }
 
-    @PatchMapping("/toggle/activity/{id}")
+    @GetMapping("/toggle/activity/{id}")
     public ServiceDetailDto patchActivedByOneService(@PathVariable String id) {
         return service.toggleActivity(id);
     }

@@ -1,8 +1,11 @@
 package br.com.entregas.Entregas.modules.treatment.services;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,82 +33,80 @@ public class TreatmentService {
     private UserRepository userRepository;
     private UserMapper userMapper;
 
-    @Transactional
-    public TreatmentPageDto listResolvedSupport(int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedTrue(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getType().equals(TreatmentType.SUPPORT)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    return null;
-                });
+    public TreatmentPageDto pageableTreatment(int page, int pageSize, List<TreatmentDetailDto> treatmentList) {
+
+        int startIndex = page * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, treatmentList.size());
+
+        List<TreatmentDetailDto> pageContent = treatmentList.subList(startIndex, endIndex);
+
+        Page<TreatmentDetailDto> treatmentPage = new PageImpl<>(pageContent, PageRequest.of(page, pageSize),
+                treatmentList.size());
+
         return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
                 treatmentPage.getTotalPages());
+    }
+
+    @Transactional
+    public TreatmentPageDto listResolvedSupport(int page, int pageSize) {
+
+        List<TreatmentDetailDto> treatmentList = repository.findAll().stream()
+                .filter(treatment -> treatment.getActived().equals(true)
+                        && treatment.getType().equals(TreatmentType.SUPPORT))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
     public TreatmentPageDto listNotResolvedSupport(int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getType().equals(TreatmentType.SUPPORT)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    return null;
-                });
-        return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
-                treatmentPage.getTotalPages());
+        List<TreatmentDetailDto> treatmentList = repository.findAll().stream()
+                .filter(treatment -> treatment.getActived().equals(false)
+                        && treatment.getType().equals(TreatmentType.SUPPORT))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
     public TreatmentPageDto listResolvedComplaint(int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedTrue(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getType().equals(TreatmentType.COMPLAINT)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    return null;
-                });
-        return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
-                treatmentPage.getTotalPages());
+        List<TreatmentDetailDto> treatmentList = repository.findAll().stream()
+                .filter(treatment -> treatment.getActived().equals(true)
+                        && treatment.getType().equals(TreatmentType.COMPLAINT))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
     public TreatmentPageDto listNotResolvedComplaint(int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getType().equals(TreatmentType.COMPLAINT)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    return null;
-                });
-        return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
-                treatmentPage.getTotalPages());
+        List<TreatmentDetailDto> treatmentList = repository.findAll().stream()
+                .filter(treatment -> treatment.getActived().equals(false)
+                        && treatment.getType().equals(TreatmentType.COMPLAINT))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
     public TreatmentPageDto listResolvedComplaintByInstitute(String idInstitute, int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedTrue(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getInstitute().getId().equals(idInstitute)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    throw new DomainException(ExceptionMessageConstant.notFound("Estabelecimento"));
-                });
-        return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
-                treatmentPage.getTotalPages());
+        List<TreatmentDetailDto> treatmentList = repository.findByInstituteId(idInstitute).stream()
+                .filter(treatment -> treatment.getActived().equals(true)
+                        && treatment.getInstitute().getId().equals(idInstitute))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
     public TreatmentPageDto listNotResolvedComplaintByInstitute(String idInstitute, int page, int pageSize) {
-        Page<TreatmentDetailDto> treatmentPage = repository.findByActivedFalse(PageRequest.of(page, pageSize))
-                .map(treatment -> {
-                    if (treatment.getInstitute().getId().equals(idInstitute)) {
-                        return mapper.toDtoDetail(treatment);
-                    }
-                    throw new DomainException(ExceptionMessageConstant.notFound("Estabelecimento"));
-                });
-        return new TreatmentPageDto(treatmentPage.getContent(), treatmentPage.getTotalElements(),
-                treatmentPage.getTotalPages());
+        
+        List<TreatmentDetailDto> treatmentList = repository.findByInstituteId(idInstitute).stream()
+                .filter(treatment -> treatment.getActived().equals(false)
+                        && treatment.getInstitute().getId().equals(idInstitute))
+                .map(treatment -> mapper.toDtoDetail(treatment)).collect(Collectors.toList());
+
+        return pageableTreatment(page, pageSize, treatmentList);
     }
 
     @Transactional
@@ -119,7 +120,8 @@ public class TreatmentService {
         if (treatment.type().equals(TreatmentType.COMPLAINT) && treatment.institute() == null) {
             throw new DomainException(ExceptionMessageConstant.notFound("Estabelecimento"));
         }
-        UserDetailDto userTreatment = userRepository.findById(treatment.sender().getId()).map(user -> userMapper.toDtoDetail(user)).get();
+        UserDetailDto userTreatment = userRepository.findById(treatment.sender().getId())
+                .map(user -> userMapper.toDtoDetail(user)).get();
         TreatmentSaveDto newTreatment = new TreatmentSaveDto(
                 treatment.id(),
                 treatment.title(),

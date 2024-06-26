@@ -23,7 +23,9 @@ public class ServiceMapper {
                 service.getMode(),
                 service.getPrice(),
                 service.getInstitute(),
-                service.getActived());
+                service.getActived(),
+                service.getValid()
+                );
     }
 
     public ServiceDetailDto toDtoDetail(ServiceModel service) {
@@ -61,6 +63,7 @@ public class ServiceMapper {
         service.setMode(serviceDto.mode());
         service.setInstitute(serviceDto.institute());
         service.setActived(serviceDto.actived());
+        service.setValid(serviceDto.valid());
         service.setUpdated(LocalDateTime.now());
 
         return service;

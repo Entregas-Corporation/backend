@@ -1,5 +1,6 @@
 package br.com.entregas.Entregas.modules.institute.controllers;
 
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -68,7 +69,7 @@ public class InstituteController {
         return service.update(institute, id);
     }
 
-    @PatchMapping("/toggle/activity/{id}")
+    @GetMapping("/toggle/activity/{id}")
     public InstituteDetailDto patchActivedByOneInstitute(@PathVariable String id){
         return service.toggleActivity(id);
     }

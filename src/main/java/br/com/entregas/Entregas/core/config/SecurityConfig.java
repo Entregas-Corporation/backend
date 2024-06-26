@@ -30,11 +30,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "user/list/admin/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "user/detail/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "user/validate/account/**").permitAll()
-                        .requestMatchers(HttpMethod.PATCH, "user/close/account/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "user/close/account/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "user/suspense/account/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "user/reactivate/account/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "user/update/role/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "user/update/user/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "user/suspense/account/**").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "user/reactivate/account/**").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "user/update/role/**").hasAnyRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "institute/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "institute/list/valid/**").hasAnyRole("USER")
@@ -42,15 +42,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "institute/list/user/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "institute/list/user/invalid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "institute/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "institute/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "institute/update/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "institute/toggle/activity/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.POST, "product-category/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product-category/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product-category/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "product-category/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product-category/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product-category/update/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "product-category/toggle/activity/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.POST, "service/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "service/list/institute/valid/**").hasAnyRole("USER")
@@ -58,8 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "service/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "service/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "service/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "service/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "service/update/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "service/toggle/activity/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.POST, "product/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/institute/valid/**").hasAnyRole("USER")
@@ -71,8 +71,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "product/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "product/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product/update/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "product/toggle/activity/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.POST, "treatment/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "treatment/list/support/resolved/**").hasAnyRole("ADMIN")
@@ -82,7 +82,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "treatment/list/institute/resolved/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "treatment/list/institute/not-resolved/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "treatment/detail/**").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "treatment/toggle/status-resolved/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "treatment/toggle/status-resolved/**").hasAnyRole("ADMIN")
 
                 )
 

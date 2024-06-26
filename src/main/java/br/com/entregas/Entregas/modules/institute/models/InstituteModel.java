@@ -1,11 +1,16 @@
 package br.com.entregas.Entregas.modules.institute.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
+import br.com.entregas.Entregas.modules.product.models.ProductModel;
+import br.com.entregas.Entregas.modules.service.models.ServiceModel;
 import br.com.entregas.Entregas.modules.user.models.UserModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -77,7 +83,19 @@ public class InstituteModel {
     @JoinColumn(name = "id_usuario", nullable = false)
     @JsonProperty(access = Access.WRITE_ONLY)
     private UserModel user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "institute")
+    List<ServiceModel> services = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "institute")
+    List<ProductModel> products = new ArrayList<>();
     
+    @NotNull(groups = GroupValidation.Create.class)
+    @Column(name = "valido", nullable = false)
+    private Boolean valid;
+
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "ativo", nullable = false)
     private Boolean actived;

@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,8 +17,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
+import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
 import br.com.entregas.Entregas.modules.user.enums.Role;
 
 
@@ -50,6 +56,10 @@ public class UserModel {
     @Column(name = "nivel", nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<InstituteModel> institutes = new ArrayList<>();
 
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "valido", nullable = false)

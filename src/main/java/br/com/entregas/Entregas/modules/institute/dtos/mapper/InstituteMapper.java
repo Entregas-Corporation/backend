@@ -14,17 +14,19 @@ public class InstituteMapper {
         if (institute == null) {
             return null;
         }
-        return new InstituteSaveDto(institute.getId(), 
-        institute.getName(), 
-        institute.getDescription(), 
-        institute.getImage(),
-         institute.getCity(),
-          institute.getLongitude(), 
-          institute.getLatitude(),
-           institute.getWhatsapp(),
-            institute.getFreight_cost_km(), 
-            institute.getUser(), 
-            institute.getActived());
+        return new InstituteSaveDto(institute.getId(),
+                institute.getName(),
+                institute.getDescription(),
+                institute.getImage(),
+                institute.getCity(),
+                institute.getLongitude(),
+                institute.getLatitude(),
+                institute.getWhatsapp(),
+                institute.getFreight_cost_km(),
+                institute.getUser(),
+                institute.getActived(),
+                institute.getValid()
+                );
     }
 
     public InstituteDetailDto toDtoDetail(InstituteModel institute) {
@@ -32,18 +34,18 @@ public class InstituteMapper {
             return null;
         }
         return new InstituteDetailDto(
-            institute.getId(),
-             institute.getName(), 
-             institute.getDescription(), 
-             institute.getImage(), 
-             institute.getCity(),
-              institute.getLongitude(), 
-              institute.getLatitude(), 
-              institute.getWhatsapp(), 
-              institute.getFreight_cost_km(), 
-              institute.getUser().getName(), 
-              institute.getCreated(),
-               institute.getUpdated());
+                institute.getId(),
+                institute.getName(),
+                institute.getDescription(),
+                institute.getImage(),
+                institute.getCity(),
+                institute.getLongitude(),
+                institute.getLatitude(),
+                institute.getWhatsapp(),
+                institute.getFreight_cost_km(),
+                institute.getUser().getName(),
+                institute.getCreated(),
+                institute.getUpdated());
     }
 
     public InstituteModel toEntity(InstituteSaveDto instituteDto) {
@@ -66,6 +68,7 @@ public class InstituteMapper {
         institute.setWhatsapp(instituteDto.whatsapp());
         institute.setUser(instituteDto.user());
         institute.setActived(instituteDto.actived());
+        institute.setValid(instituteDto.valid());
         institute.setUpdated(LocalDateTime.now());
 
         return institute;

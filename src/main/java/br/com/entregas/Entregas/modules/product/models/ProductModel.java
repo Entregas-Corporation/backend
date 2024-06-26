@@ -71,6 +71,9 @@ public class ProductModel {
     @Column(name = "ativo", nullable = false)
     private Boolean actived;
 
+    @Column(name = "valido", nullable = false)
+    private Boolean valid;
+
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "criado", nullable = false)
     private LocalDateTime created = LocalDateTime.now();

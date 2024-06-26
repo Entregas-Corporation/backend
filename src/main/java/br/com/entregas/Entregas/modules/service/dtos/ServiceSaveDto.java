@@ -14,5 +14,7 @@ public record ServiceSaveDto(
             @NotNull(groups = GroupValidation.Create.class) ServiceMode mode,
             @NotNull(groups = {GroupValidation.Create.class}) Double price,
             @NotNull(groups = {GroupValidation.Create.class}) InstituteModel institute,
-            Boolean actived) {
+            Boolean actived,
+            Boolean valid
+            ) {
 }
