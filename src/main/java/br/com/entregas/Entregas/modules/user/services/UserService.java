@@ -15,7 +15,7 @@ import br.com.entregas.Entregas.core.dtos.token.user.UserTokenDto;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
 import br.com.entregas.Entregas.core.services.sendEmail.SendEmailService;
 import br.com.entregas.Entregas.core.services.token.user.TokenUserService;
-
+import br.com.entregas.Entregas.modules.deliveryman.repositories.DeliverymanRepository;
 import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
 import br.com.entregas.Entregas.modules.user.dtos.UserDetailDto;
 import br.com.entregas.Entregas.modules.user.dtos.UserPageDto;
@@ -33,6 +33,7 @@ public class UserService {
     private TokenUserService tokenService;
     private SendEmailService sendEmailService;
     private InstituteRepository instituteRepository;
+    private DeliverymanRepository deliverymanRepository;
 
 
     @Transactional
@@ -114,6 +115,9 @@ public class UserService {
             for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
                 instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(false);
             }
+            for (int i = 0; i < recordFound.getDeliverymen().size(); i++) {
+                deliverymanRepository.save(recordFound.getDeliverymen().get(i)).setValid(false);
+            }
             return repository.save(recordFound);
 
         }).map(user -> mapper.toDto(user))
@@ -127,6 +131,9 @@ public class UserService {
                 recordFound.setValid(true);
                 for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
                     instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(true);
+                }
+                for (int i = 0; i < recordFound.getDeliverymen().size(); i++) {
+                    deliverymanRepository.save(recordFound.getDeliverymen().get(i)).setValid(true);
                 }
             }
             recordFound.setUpdated(LocalDateTime.now());
@@ -150,6 +157,9 @@ public class UserService {
             for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
                 instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(false);
             }
+            for (int i = 0; i < recordFound.getDeliverymen().size(); i++) {
+                deliverymanRepository.save(recordFound.getDeliverymen().get(i)).setValid(false);
+            }
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Usuário")))));
@@ -164,6 +174,9 @@ public class UserService {
             recordFound.setUpdated(LocalDateTime.now());
             for (int i = 0; i < recordFound.getInstitutes().size(); i++) {
                 instituteRepository.save(recordFound.getInstitutes().get(i)).setValid(true);
+            }
+            for (int i = 0; i < recordFound.getDeliverymen().size(); i++) {
+                deliverymanRepository.save(recordFound.getDeliverymen().get(i)).setValid(true);
             }
             return repository.save(recordFound);
         }).map(user -> mapper.toDto(user))

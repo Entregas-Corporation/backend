@@ -84,6 +84,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "treatment/detail/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "treatment/toggle/status-resolved/**").hasAnyRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST, "deliveryman/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/institute/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/institute/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/user/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/user/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/toggle/activity/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "deliveryman/update/**").hasAnyRole("USER")
+
+
                 )
 
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)

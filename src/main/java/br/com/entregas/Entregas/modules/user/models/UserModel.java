@@ -23,6 +23,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
+import br.com.entregas.Entregas.modules.deliveryman.models.DeliverymanModel;
 import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
 import br.com.entregas.Entregas.modules.user.enums.Role;
 
@@ -60,6 +61,10 @@ public class UserModel {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     List<InstituteModel> institutes = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<DeliverymanModel> deliverymen = new ArrayList<>();
 
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "valido", nullable = false)
