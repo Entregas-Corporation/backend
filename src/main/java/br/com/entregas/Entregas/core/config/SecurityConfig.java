@@ -101,6 +101,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "product-item/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product-item/update/**").hasAnyRole("USER")
 
+                        .requestMatchers(HttpMethod.POST, "order/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/list/canceled/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/list/delivered/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/list/sent/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/list/requested/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/status/canceled/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/status/delivered/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "order/toggle/activity/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "order/update/**").hasAnyRole("USER")
+
                 )
 
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)
