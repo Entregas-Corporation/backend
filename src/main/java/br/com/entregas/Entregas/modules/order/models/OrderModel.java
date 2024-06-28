@@ -36,7 +36,7 @@ public class OrderModel {
     @Column(name = "price", nullable = true)
     private Double price;
 
-    @Column(name = "status_pedido", nullable = true)
+    @Column(name = "status_pedido", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusOrder status;
 
