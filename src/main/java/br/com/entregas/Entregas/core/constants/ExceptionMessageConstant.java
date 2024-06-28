@@ -7,6 +7,8 @@ public final class ExceptionMessageConstant {
     public static final String invalidAuthentication = "Autenticação inválida!";
 
     public static final String unauthorizedAccess = "Acesso não autorizado!";
+    
+    public static final String invalidQuantity = "Quantidade inválida!";
 
     public static final String attributeUsed(String attribute) {
         return attribute + " já em uso!";

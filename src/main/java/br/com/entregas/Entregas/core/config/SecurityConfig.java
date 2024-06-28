@@ -95,6 +95,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "deliveryman/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "deliveryman/update/**").hasAnyRole("USER")
 
+                        .requestMatchers(HttpMethod.POST, "product-item/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product-item/list/user/valid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product-item/detail/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product-item/toggle/activity/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "product-item/update/**").hasAnyRole("USER")
 
                 )
 
