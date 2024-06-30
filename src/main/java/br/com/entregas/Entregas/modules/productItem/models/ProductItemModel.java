@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import br.com.entregas.Entregas.core.validation.GroupValidation;
+import br.com.entregas.Entregas.modules.orderItem.models.OrderItemModel;
 import br.com.entregas.Entregas.modules.product.models.ProductModel;
 import br.com.entregas.Entregas.modules.user.models.UserModel;
 import jakarta.persistence.Column;
@@ -52,6 +53,12 @@ public class ProductItemModel {
     @JsonProperty(access = Access.WRITE_ONLY)
     private UserModel user;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_item_pedido")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private OrderItemModel orderItem;
+
+    @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "ativo", nullable = false)
     private Boolean actived;
 

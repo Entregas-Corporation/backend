@@ -80,17 +80,7 @@ public class OrderService {
                                                 ExceptionMessageConstant.notFound("Pedido")));
         }
 
-        @Transactional
-        public OrderDetailDto save(OrderSaveDto order) {
-                OrderSaveDto newOrder = new OrderSaveDto(
-                                order.id(),
-                                StatusOrder.REQUESTED,
-                                order.price(),
-                                order.freight(),
-                                order.date());
-                return mapper.toDtoDetail(repository.save(mapper.toEntity(newOrder)));
-        }
-
+       
         @Transactional
         public OrderDetailDto update(OrderSaveDto order, String id) {
                 return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {

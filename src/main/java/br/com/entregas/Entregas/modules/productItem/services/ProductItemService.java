@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +21,18 @@ import lombok.AllArgsConstructor;
 public class ProductItemService {
         private ProductItemRepository repository;
         private ProductItemMapper mapper;
-        private ProductRepository productRepository; 
+        private ProductRepository productRepository;
 
         @Transactional
         public List<ProductItemDetailDto> listValidByUser(String userId) {
-                return repository.findByUserId(userId).stream()
-                                .filter(productItem -> productItem.getActived().equals(true))
+                return repository.findByUserIdAndActivedTrue(userId).stream()
                                 .map(productItem -> mapper.toDtoDetail(productItem)).collect(Collectors.toList());
 
         }
 
         @Transactional
         public ProductItemDetailDto detail(String id) {
-                return repository.findById(id).filter(productItem -> productItem.getActived().equals(true))
+                return repository.findById(id)
                                 .map(productItem -> mapper.toDtoDetail(productItem))
                                 .orElseThrow(() -> new DomainException(
                                                 ExceptionMessageConstant.notFound("Entregador")));
@@ -42,7 +40,8 @@ public class ProductItemService {
 
         @Transactional
         public ProductItemDetailDto save(ProductItemSaveDto productItem) {
-                if (productItem.quantity() > productRepository.findById(productItem.product().getId()).get().getQuantity() || productItem.quantity() < 1) {
+                if (productItem.quantity() > productRepository.findById(productItem.product().getId()).get()
+                                .getQuantity() || productItem.quantity() < 1) {
                         throw new DomainException(ExceptionMessageConstant.invalidQuantity);
                 }
                 ProductItemSaveDto newProductItem = new ProductItemSaveDto(
@@ -50,7 +49,8 @@ public class ProductItemService {
                                 productItem.product(),
                                 productItem.user(),
                                 productItem.quantity(),
-                                productItem.quantity() * productRepository.findById(productItem.product().getId()).get().getPrice(),
+                                productItem.quantity() * productRepository.findById(productItem.product().getId()).get()
+                                                .getPrice(),
                                 true);
 
                 return mapper.toDtoDetail(repository.save(mapper.toEntity(newProductItem)));
@@ -60,11 +60,19 @@ public class ProductItemService {
         public ProductItemDetailDto update(ProductItemSaveDto productItem, String id) {
                 return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
                         if (productItem.quantity() != null) {
-                                if (productItem.quantity() > productRepository.findById(productItem.product().getId()).get().getQuantity() || productItem.quantity() < 1) {
+                                if (productItem.quantity() > productRepository.findById(productItem.product().getId())
+                                                .get().getQuantity() || productItem.quantity() < 1) {
                                         throw new DomainException(ExceptionMessageConstant.invalidQuantity);
                                 }
+                                if (productItem.quantity() != null) {
+                                        
+                                }
                                 recordFound.setQuantity(productItem.quantity());
-                                recordFound.setPrice(productItem.quantity() * productRepository.findById(recordFound.getProduct().getId()).get().getPrice());
+                                recordFound.setPrice(productItem.quantity() * productRepository
+                                                .findById(recordFound.getProduct().getId()).get().getPrice());
+                        }
+                        if (productItem.actived() != null) {
+                                recordFound.setActived(productItem.actived());
                         }
                         recordFound.setUpdated(LocalDateTime.now());
                         return repository.save(recordFound);
@@ -74,14 +82,11 @@ public class ProductItemService {
         }
 
         @Transactional
-        public ProductItemDetailDto toggleActivity(String id) {
-                return mapper.toDtoDetail(mapper.toEntity(repository.findById(id)
-                                .map(recordFound -> {
-                                        recordFound.setActived(!recordFound.getActived());
-                                        recordFound.setUpdated(LocalDateTime.now());
-                                        return repository.save(recordFound);
-                                }).map(ProductItem -> mapper.toDto(ProductItem))
-                                .orElseThrow(() -> new DomainException(
-                                                ExceptionMessageConstant.notFound("Item de Produto")))));
+        public void toggleActivity(String id) {
+                if (!repository.findById(id).isPresent()) {
+                        throw new DomainException(
+                                        ExceptionMessageConstant.notFound("Item de Produto"));
+                }
+                repository.deleteById(id);
         }
 }

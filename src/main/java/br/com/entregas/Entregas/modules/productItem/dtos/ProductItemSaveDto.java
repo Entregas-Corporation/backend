@@ -11,5 +11,6 @@ public record ProductItemSaveDto(
         @NotNull(groups = GroupValidation.Create.class) UserModel user,
         @NotNull(groups = GroupValidation.Create.class) Integer quantity,
         Double price,
-        Boolean actived){
+        Boolean actived
+        ){
 }

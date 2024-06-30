@@ -11,5 +11,5 @@ import br.com.entregas.Entregas.modules.productItem.models.ProductItemModel;
 
 @CrossOrigin(origins = "*")
 public interface ProductItemRepository extends JpaRepository<ProductItemModel, String>{
-     List<ProductItemModel> findByUserId(String user);
+     List<ProductItemModel> findByUserIdAndActivedTrue(String user);
 }

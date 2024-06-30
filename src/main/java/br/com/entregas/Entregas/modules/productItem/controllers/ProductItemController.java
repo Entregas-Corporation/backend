@@ -50,9 +50,9 @@ public class ProductItemController {
         return service.update(newProductItem, id);
     }
 
-    @GetMapping("/toggle/activity/{id}")
-    public ProductItemDetailDto patchActivedByOneProductItem(@PathVariable String id) {
-        return service.toggleActivity(id);
+    @GetMapping("/delete/{id}")
+    public void patchActivedByOneProductItem(@PathVariable String id) {
+        service.toggleActivity(id);
     }
 
 }
