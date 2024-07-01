@@ -9,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.entregas.Entregas.core.constants.ExceptionMessageConstant;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
+import br.com.entregas.Entregas.modules.product.dtos.mapper.ProductMapper;
+import br.com.entregas.Entregas.modules.product.models.ProductModel;
 import br.com.entregas.Entregas.modules.product.repositories.ProductRepository;
+import br.com.entregas.Entregas.modules.product.services.ProductService;
 import br.com.entregas.Entregas.modules.productItem.dtos.ProductItemDetailDto;
 import br.com.entregas.Entregas.modules.productItem.dtos.ProductItemSaveDto;
 import br.com.entregas.Entregas.modules.productItem.dtos.mapper.ProductItemMapper;
@@ -22,6 +25,8 @@ public class ProductItemService {
         private ProductItemRepository repository;
         private ProductItemMapper mapper;
         private ProductRepository productRepository;
+        private ProductMapper productMapper;
+        private ProductService productService;
 
         @Transactional
         public List<ProductItemDetailDto> listValidByUser(String userId) {
@@ -64,9 +69,6 @@ public class ProductItemService {
                                                 .get().getQuantity() || productItem.quantity() < 1) {
                                         throw new DomainException(ExceptionMessageConstant.invalidQuantity);
                                 }
-                                if (productItem.quantity() != null) {
-                                        
-                                }
                                 recordFound.setQuantity(productItem.quantity());
                                 recordFound.setPrice(productItem.quantity() * productRepository
                                                 .findById(recordFound.getProduct().getId()).get().getPrice());
@@ -80,6 +82,30 @@ public class ProductItemService {
                                 .orElseThrow(() -> new DomainException(
                                                 ExceptionMessageConstant.notFound("Item de Produto")))));
         }
+
+        @Transactional
+        public ProductItemDetailDto updateByOrder(ProductItemSaveDto productItem, String id) {
+                return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
+                        ProductModel product = productRepository.findById(recordFound.getProduct().getId()).get();
+
+                        if (productItem.actived() != null) {
+                                if (recordFound.getQuantity() > product.getQuantity()) {
+                                        throw new DomainException(ExceptionMessageConstant.invalidQuantity);
+                                }
+
+                                product.setQuantity(product.getQuantity() - recordFound.getQuantity());
+                                productService.update(productMapper.toDto(product), product.getId());
+                                recordFound.setActived(productItem.actived());
+                        }
+
+                        recordFound.setUpdated(LocalDateTime.now());
+                        return repository.save(recordFound);
+                }).map(inst -> mapper.toDto(inst))
+                                .orElseThrow(() -> new DomainException(
+                                                ExceptionMessageConstant.notFound("Item de Produto")))));
+        }
+
+        
 
         @Transactional
         public void toggleActivity(String id) {

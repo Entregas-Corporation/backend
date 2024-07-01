@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
 import br.com.entregas.Entregas.modules.order.models.OrderModel;
 import br.com.entregas.Entregas.modules.productItem.models.ProductItemModel;
 import jakarta.persistence.CascadeType;
@@ -37,6 +39,14 @@ public class OrderItemModel {
     @JoinColumn(name = "id_pedido")
     @JsonProperty(access = Access.WRITE_ONLY)
     private OrderModel order;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "id_estabelecimento", nullable = false)
+    @JsonProperty(access = Access.WRITE_ONLY)
+    private InstituteModel institute;
+
+    @Column(name = "distancia", nullable = false)
+    private Double distance;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "orderItem", cascade = CascadeType.ALL)
     @JsonProperty(access = Access.WRITE_ONLY)

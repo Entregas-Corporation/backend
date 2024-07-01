@@ -98,7 +98,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "product-item/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product-item/list/user/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product-item/detail/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "product-item/delete/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "product-item/delete/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "product-item/update/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.GET, "order/list/canceled/**").hasAnyRole("USER")

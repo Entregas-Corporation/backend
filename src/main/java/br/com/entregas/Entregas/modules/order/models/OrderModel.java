@@ -1,10 +1,15 @@
 package br.com.entregas.Entregas.modules.order.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.entregas.Entregas.core.validation.GroupValidation;
 import br.com.entregas.Entregas.modules.order.enums.StatusOrder;
+import br.com.entregas.Entregas.modules.orderItem.models.OrderItemModel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +17,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -36,12 +42,19 @@ public class OrderModel {
     @Column(name = "price", nullable = true)
     private Double price;
 
+    @Column(name = "total", nullable = true)
+    private Double total;
+
     @Column(name = "status_pedido", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusOrder status;
 
     @Column(name = "data_entrega", nullable = true)
     private Date date;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "order")
+    List<OrderItemModel> orders = new ArrayList<>();
 
     @NotNull(groups = GroupValidation.Create.class)
     @Column(name = "criado", nullable = false)

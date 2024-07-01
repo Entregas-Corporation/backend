@@ -19,7 +19,9 @@ public class OrderMapper {
                 order.getStatus(),
                 order.getPrice(),
                 order.getFreight(),
-                order.getDate());
+                order.getTotal(),
+                order.getDate()
+                );
     }
 
     public OrderDetailDto toDtoDetail(OrderModel order) {
@@ -31,6 +33,7 @@ public class OrderMapper {
                 order.getStatus(),
                 order.getPrice(),
                 order.getFreight(),
+                order.getTotal(),
                 order.getDate(),
                 order.getCreated(),
                 order.getUpdated());
@@ -49,6 +52,7 @@ public class OrderMapper {
         order.setDate(orderDto.date());
         order.setFreight(orderDto.freight());
         order.setPrice(orderDto.price());
+        order.setTotal(orderDto.total());
         order.setStatus(orderDto.status());
         order.setUpdated(LocalDateTime.now());
 

@@ -10,6 +10,7 @@ public record OrderDetailDto(
         StatusOrder status,
         Double price,
         Double freight,
+        Double total,
         Date date,
         LocalDateTime created,
         LocalDateTime updated) {

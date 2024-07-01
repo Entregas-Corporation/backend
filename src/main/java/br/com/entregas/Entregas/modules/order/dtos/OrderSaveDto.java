@@ -9,5 +9,6 @@ public record OrderSaveDto(
                 StatusOrder status,
                 Double price,
                 Double freight,
+                Double total,
                 Date date) {
 }
