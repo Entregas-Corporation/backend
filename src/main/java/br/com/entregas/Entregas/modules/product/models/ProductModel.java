@@ -32,7 +32,7 @@ public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @EqualsAndHashCode.Include
-    @Column(name = "id_servico")
+    @Column(name = "id_produto")
     private String id;
 
     @NotBlank(groups = GroupValidation.Create.class)

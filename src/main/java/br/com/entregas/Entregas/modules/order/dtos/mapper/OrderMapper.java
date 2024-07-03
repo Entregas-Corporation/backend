@@ -20,6 +20,9 @@ public class OrderMapper {
                 order.getPrice(),
                 order.getFreight(),
                 order.getTotal(),
+                order.getInstitute(),
+                order.getUserName(),
+                order.getUserEmail(),
                 order.getDate()
                 );
     }
@@ -35,6 +38,10 @@ public class OrderMapper {
                 order.getFreight(),
                 order.getTotal(),
                 order.getDate(),
+                order.getInstitute().getName(),
+                order.getUserName(),
+                order.getUserEmail(),
+                order.getOrders(),
                 order.getCreated(),
                 order.getUpdated());
     }
@@ -54,6 +61,9 @@ public class OrderMapper {
         order.setPrice(orderDto.price());
         order.setTotal(orderDto.total());
         order.setStatus(orderDto.status());
+        order.setInstitute(orderDto.institute());
+        order.setUserName(orderDto.userName());
+        order.setUserEmail(order.getUserEmail());
         order.setUpdated(LocalDateTime.now());
 
         return order;

@@ -71,4 +71,36 @@ public class SendEmailService {
                 SendEmailMessageConstant.textTreatmentComplaint(userSaveDto.name()));
         sendEmail(sendEmailDto);
     }
+
+    @Transactional
+    public void sendRequestedOrder(String name, String email, String institute) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", email,
+                SendEmailMessageConstant.titleRequestedOrder,
+                SendEmailMessageConstant.textRequestedOrder(name, institute));
+        sendEmail(sendEmailDto);
+    }
+
+    @Transactional
+    public void sendSentOrder(String name, String email, String institute) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", email,
+                SendEmailMessageConstant.titleSentOrder,
+                SendEmailMessageConstant.textSentOrder(name, institute));
+        sendEmail(sendEmailDto);
+    }
+
+    @Transactional
+    public void sendCanceledOrder(String name, String email, String institute) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", email,
+                SendEmailMessageConstant.titleCanceledOrder,
+                SendEmailMessageConstant.textCanceledOrder(name, institute));
+        sendEmail(sendEmailDto);
+    }
+
+    @Transactional
+    public void sendDeliveredOrder(String name, String email, String institute) {
+        SendEmailDto sendEmailDto = new SendEmailDto("{spring.mail.username}", email,
+                SendEmailMessageConstant.titleDeliveredOrder,
+                SendEmailMessageConstant.textDeliveredOrder(name, institute));
+        sendEmail(sendEmailDto);
+    }
 }

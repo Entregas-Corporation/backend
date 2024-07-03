@@ -14,6 +14,15 @@ public final class SendEmailMessageConstant {
     public static final String titleTreatmentComplaint = "Denúncia Recebida!";
 
     public static final String titleTreatmentSupport = "Mensagem Recebida!";
+
+    public static final String titleRequestedOrder = "Pedido Recebido!";
+
+    public static final String titleCanceledOrder = "Pedido Cancelado!";
+
+    public static final String titleSentOrder = "Pedido Enviado!";
+
+    public static final String titleDeliveredOrder = "Pedido em Entregue!";
+
     
     public static final String textWellcome(String id_user, String username) {
         return "Olá, "+username+"! Sua conta está quase concluída."+
@@ -50,6 +59,43 @@ public final class SendEmailMessageConstant {
     public static final String textTreatmentComplaint(String username) {
         return "Olá, "+username+"! Sua reclamação foi recebida em nosso sistema."+
         "\nAgora basta aguardar a nossa resposta perante ao atendimento realizado."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textRequestedOrder(String username, String institute) {
+        return "Olá, "+username+"! Parabéns! O seu pedido da loja "+institute+" foi recebido e está em processo de preparação para ser enviado."+
+        "\nAgora basta aguardar as próximos etapas de entrega do pedido neste mesmo e-mail."+
+        "\n\nAh! Você pode cancelar o pedido antes dele ser enviado."+
+        "\n\nTrabalhamos muito para garantir a melhor segurança e bem-estar entre nossos clientes, entregadores e empresários."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textCanceledOrder(String username, String institute) {
+        return "Olá, "+username+"! Infelizmente, o seu pedido da loja "+institute+" foi cancelado e está voltado para a vitrine do estabelecimento."+
+        "\n\nTrabalhamos muito para garantir a melhor segurança e bem-estar entre nossos clientes, entregadores e empresários."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textSentOrder(String username, String institute) {
+        return "Olá, "+username+"! Temos boas notícias! O Seu pedido da loja "+institute+" foi enviado e está em trânsito para ser entregue."+
+        "\nAgora basta aguardar as próximos etapas de entrega do pedido neste mesmo e-mail."+
+        "\n\nAh! Caso tenha desistido do pedido, informe ao entregador sobre o cancelamento quando ele chegar em seu estabelecimento, por favor."+
+        "\n\nTrabalhamos muito para garantir a melhor segurança e bem-estar entre nossos clientes, entregadores e empresários."+
+        "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
+        "\n\nAtenciosamente,"+
+        "\nSuporte Entregas.";
+    }
+
+    public static final String textDeliveredOrder(String username, String institute) {
+        return "Olá, "+username+"! Temos boas notícias! O seu pedido da loja "+institute+" foi entregue em seu estabelecimento."+
+        "\nA loja agradece imensamente a sua preferência."+
+        "\n\nTrabalhamos muito para garantir a melhor segurança e bem-estar entre nossos clientes, entregadores e empresários."+
         "\nCaso tenha alguma dúvida, sinta-se a vontade para nos enviar."+
         "\n\nAtenciosamente,"+
         "\nSuporte Entregas.";

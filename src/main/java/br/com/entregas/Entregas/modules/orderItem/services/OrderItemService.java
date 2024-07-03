@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.entregas.Entregas.core.services.sendEmail.SendEmailService;
 import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
 import br.com.entregas.Entregas.modules.order.enums.StatusOrder;
 import br.com.entregas.Entregas.modules.order.models.OrderModel;
@@ -19,6 +20,7 @@ import br.com.entregas.Entregas.modules.productItem.dtos.mapper.ProductItemMappe
 import br.com.entregas.Entregas.modules.productItem.models.ProductItemModel;
 import br.com.entregas.Entregas.modules.productItem.repositories.ProductItemRepository;
 import br.com.entregas.Entregas.modules.productItem.services.ProductItemService;
+import br.com.entregas.Entregas.modules.user.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -31,6 +33,8 @@ public class OrderItemService {
         private ProductRepository productRepository;
         private OrderRepository orderRepository;
         private InstituteRepository instituteRepository;
+        private SendEmailService sendEmailService;
+        private UserRepository userRepository;
 
         @Transactional
         public List<OrderItemModel> save(OrderItemModel orderItem) {
@@ -60,6 +64,7 @@ public class OrderItemService {
                         double freight = 0;
                         // aqui faz a mesma coisa em cima só que verifica se o id do produto é igual ao
                         // que ta na lista de idsprodutos
+        
                         for (ProductItemModel productItem : orderItem.getProductItens()) {
                                 ProductItemModel newProductItem = productItemRepository.findById(productItem.getId())
                                                 .get();
@@ -74,8 +79,8 @@ public class OrderItemService {
                                         productItemService.updateByOrder(productItemMapper.toDto(newProductItem),
                                                         productItemRepository.findById(newProductItem.getId()).get()
                                                                         .getId());
-
                                         freight = instituteRepository.findById(institutesId).get().getFreight_cost_km();
+                                        
                                         productItemList.add(newProductItem);
                                         total += newProductItem.getPrice();
                                 }
@@ -88,13 +93,26 @@ public class OrderItemService {
 
                         double freightCost = freight * orderItem.getDistance();
 
+                        String userName = userRepository
+                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
+                        .get().getName();
+
+                        String userEmail = userRepository
+                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
+                        .get().getEmail();
+
                         OrderModel newOrderModel = new OrderModel();
                         newOrderModel.setPrice(total);
                         newOrderModel.setStatus(StatusOrder.REQUESTED);
                         newOrderModel.setFreight(freightCost);
                         newOrderModel.setTotal(total + freightCost);
+                        newOrderModel.setInstitute(instituteRepository.findById(institutesId).get());
+                        newOrderModel.setUserName(userName);
+                        newOrderModel.setUserEmail(userEmail);
                         newOrderModel.setUpdated(LocalDateTime.now());
                         orderRepository.save(newOrderModel);
+                        sendEmailService.sendRequestedOrder(
+                                newOrderModel.getUserName(), newOrderModel.getUserEmail(), instituteRepository.findById(institutesId).get().getName());
 
                         // Aqui é criado um novo item pedido e adicionado na lista de itens pedido
                         OrderItemModel newOrderItemModel = new OrderItemModel();

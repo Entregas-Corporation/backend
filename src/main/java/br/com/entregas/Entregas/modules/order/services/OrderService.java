@@ -12,12 +12,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.entregas.Entregas.core.constants.ExceptionMessageConstant;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
+import br.com.entregas.Entregas.core.services.sendEmail.SendEmailService;
+import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
 import br.com.entregas.Entregas.modules.order.dtos.OrderDetailDto;
 import br.com.entregas.Entregas.modules.order.dtos.OrderPageDto;
 import br.com.entregas.Entregas.modules.order.dtos.OrderSaveDto;
 import br.com.entregas.Entregas.modules.order.dtos.mapper.OrderMapper;
 import br.com.entregas.Entregas.modules.order.enums.StatusOrder;
 import br.com.entregas.Entregas.modules.order.repositories.OrderRepository;
+import br.com.entregas.Entregas.modules.orderItem.models.OrderItemModel;
+import br.com.entregas.Entregas.modules.orderItem.repositories.OrderItemRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -26,7 +30,9 @@ import lombok.AllArgsConstructor;
 public class OrderService {
         private OrderRepository repository;
         private OrderMapper mapper;
-
+        private OrderItemRepository orderItemRepository;
+        private InstituteRepository instituteRepository;
+        private SendEmailService sendEmailService;
         public OrderPageDto pageableOrder(int page, int pageSize, List<OrderDetailDto> orderList) {
 
                 int startIndex = page * pageSize;
@@ -42,30 +48,74 @@ public class OrderService {
         }
 
         @Transactional
-        public List<OrderDetailDto> listRequestedByUser() {
+        public List<OrderDetailDto> listRequestedByUser(String id) {
                 return repository.findByStatus(StatusOrder.REQUESTED).stream()
+                                .filter(order -> {
+                                        for (OrderItemModel item : order.getOrders()) {
+                                                if (id.equals(instituteRepository
+                                                                .findById(orderItemRepository.findById(item.getId())
+                                                                                .get().getInstitute().getId())
+                                                                .get().getUser().getId())) {
+                                                        return true;
+                                                }
+                                        }
+                                        return false;
+                                })
                                 .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
 
         }
 
         @Transactional
-        public List<OrderDetailDto> listSentByUser() {
+        public List<OrderDetailDto> listSentByUser(String id) {
                 return repository.findByStatus(StatusOrder.SENT).stream()
+                                .filter(order -> {
+                                        for (OrderItemModel item : order.getOrders()) {
+                                                if (id.equals(instituteRepository
+                                                                .findById(orderItemRepository.findById(item.getId())
+                                                                                .get().getInstitute().getId())
+                                                                .get().getUser().getId())) {
+                                                        return true;
+                                                }
+                                        }
+                                        return false;
+                                })
                                 .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
 
         }
 
         @Transactional
-        public OrderPageDto listCanceledByUser(int page, int pageSize) {
+        public OrderPageDto listCanceledByUser(String id, int page, int pageSize) {
                 List<OrderDetailDto> orderList = repository.findByStatus(StatusOrder.CANCELED).stream()
+                                .filter(order -> {
+                                        for (OrderItemModel item : order.getOrders()) {
+                                                if (id.equals(instituteRepository
+                                                                .findById(orderItemRepository.findById(item.getId())
+                                                                                .get().getInstitute().getId())
+                                                                .get().getUser().getId())) {
+                                                        return true;
+                                                }
+                                        }
+                                        return false;
+                                })
                                 .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
 
                 return pageableOrder(page, pageSize, orderList);
         }
 
         @Transactional
-        public OrderPageDto listDeliveredByUser(int page, int pageSize) {
+        public OrderPageDto listDeliveredByUser(String id, int page, int pageSize) {
                 List<OrderDetailDto> orderList = repository.findByStatus(StatusOrder.DELIVERED).stream()
+                                .filter(order -> {
+                                        for (OrderItemModel item : order.getOrders()) {
+                                                if (id.equals(instituteRepository
+                                                                .findById(orderItemRepository.findById(item.getId())
+                                                                                .get().getInstitute().getId())
+                                                                .get().getUser().getId())) {
+                                                        return true;
+                                                }
+                                        }
+                                        return false;
+                                })
                                 .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
 
                 return pageableOrder(page, pageSize, orderList);
@@ -80,7 +130,6 @@ public class OrderService {
                                                 ExceptionMessageConstant.notFound("Pedido")));
         }
 
-       
         @Transactional
         public OrderDetailDto update(OrderSaveDto order, String id) {
                 return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
@@ -97,29 +146,96 @@ public class OrderService {
                         return repository.save(recordFound);
                 }).map(inst -> mapper.toDto(inst))
                                 .orElseThrow(() -> new DomainException(
-                                                ExceptionMessageConstant.notFound("Item de Produto")))));
+                                                ExceptionMessageConstant.notFound("Pedido")))));
         }
 
         @Transactional
         public OrderDetailDto cancel(String id) {
-                return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(order -> {
+                OrderDetailDto orderDetailDto = mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(order -> {
                         order.setStatus(StatusOrder.CANCELED);
                         order.setUpdated(LocalDateTime.now());
                         return repository.save(order);
                 }).map(order -> mapper.toDto(order))
                                 .orElseThrow(() -> new DomainException(
-                                                ExceptionMessageConstant.notFound("Item de Produto")))));
+                                                ExceptionMessageConstant.notFound("Pedido")))));
+                
+                String userName = repository.findById(orderDetailDto.id()).get().getUserName();
+                String userEmail = repository.findById(orderDetailDto.id()).get().getUserEmail();
+                String institute = instituteRepository.findById(repository.findById(orderDetailDto.id()).get().getInstitute().getId()).get().getName();
+                sendEmailService.sendCanceledOrder(userName, userEmail, institute );
+                return orderDetailDto;
         }
 
         @Transactional
         public OrderDetailDto deliver(String id) {
-                return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(order -> {
+                OrderDetailDto orderDetailDto = mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(order -> {
                         order.setStatus(StatusOrder.DELIVERED);
                         order.setUpdated(LocalDateTime.now());
                         return repository.save(order);
                 }).map(order -> mapper.toDto(order))
                                 .orElseThrow(() -> new DomainException(
-                                                ExceptionMessageConstant.notFound("Item de Produto")))));
+                                                ExceptionMessageConstant.notFound("pedido")))));
+                
+                
+
+                String userName = repository.findById(orderDetailDto.id()).get().getUserName();
+                String userEmail = repository.findById(orderDetailDto.id()).get().getUserEmail();
+                String institute = instituteRepository.findById(repository.findById(orderDetailDto.id()).get().getInstitute().getId()).get().getName();
+                sendEmailService.sendDeliveredOrder(userName, userEmail, institute );
+                return orderDetailDto;
+        }
+
+        @Transactional
+        public OrderDetailDto send(String id) {
+                OrderDetailDto orderDetailDto = mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(order -> {
+                        order.setStatus(StatusOrder.SENT);
+                        order.setUpdated(LocalDateTime.now());
+                        return repository.save(order);
+                }).map(order -> mapper.toDto(order))
+                                .orElseThrow(() -> new DomainException(
+                                                ExceptionMessageConstant.notFound("pedido")))));
+                
+                
+
+                String userName = repository.findById(orderDetailDto.id()).get().getUserName();
+                String userEmail = repository.findById(orderDetailDto.id()).get().getUserEmail();
+                String institute = instituteRepository.findById(repository.findById(orderDetailDto.id()).get().getInstitute().getId()).get().getName();
+                sendEmailService.sendSentOrder(userName, userEmail, institute );
+                return orderDetailDto;
+        }
+
+        @Transactional
+        public List<OrderDetailDto> listRequestedByInstitute(String id) {
+                return repository.findByStatus(StatusOrder.REQUESTED).stream()
+                                .filter(order -> id.equals(order.getInstitute().getId()))
+                                .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
+
+        }
+
+        @Transactional
+        public List<OrderDetailDto> listSentByInstitute(String id) {
+                return repository.findByStatus(StatusOrder.SENT).stream()
+                                .filter(order -> id.equals(order.getInstitute().getId()))
+                                .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
+
+        }
+
+        @Transactional
+        public OrderPageDto listCanceledByInstitute(String id, int page, int pageSize) {
+                List<OrderDetailDto> orderList = repository.findByStatus(StatusOrder.CANCELED).stream()
+                .filter(order -> id.equals(order.getInstitute().getId()))
+                                .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
+                return pageableOrder(page, pageSize, orderList);
+        }
+
+        @Transactional
+        public OrderPageDto listDeliveredByInstitute(String id, int page, int pageSize) {
+                List<OrderDetailDto> orderList = repository.findByStatus(StatusOrder.DELIVERED).stream()
+                .filter(order -> id.equals(order.getInstitute().getId()))
+                                .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
+
+                return pageableOrder(page, pageSize, orderList);
+
         }
 
 }

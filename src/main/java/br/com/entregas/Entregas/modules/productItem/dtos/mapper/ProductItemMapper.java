@@ -1,6 +1,8 @@
 package br.com.entregas.Entregas.modules.productItem.dtos.mapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,27 @@ public class ProductItemMapper {
                 productItem.getPrice(),
                 productItem.getActived()
                 );
+    }
+
+    public List<ProductItemSaveDto> toDtoList(List<ProductItemModel> productItem) {
+        List<ProductItemSaveDto> list = new ArrayList<>();
+        if (productItem == null) {
+            return null;
+        }
+
+        for (ProductItemModel productItemModel : productItem) {
+            ProductItemSaveDto newProductItem = new ProductItemSaveDto(
+                productItemModel.getId(),
+                productItemModel.getProduct(),
+                productItemModel.getUser(),
+                productItemModel.getQuantity(),
+                productItemModel.getPrice(),
+                productItemModel.getActived()
+                );
+            list.add(newProductItem);
+        }
+
+        return list;
     }
 
     public ProductItemDetailDto toDtoDetail(ProductItemModel productItem) {
