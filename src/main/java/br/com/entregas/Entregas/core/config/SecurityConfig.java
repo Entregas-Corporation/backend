@@ -118,6 +118,12 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "order-item/register").hasAnyRole("USER")
 
+                        .requestMatchers(HttpMethod.POST, "delivery/register").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "delivery/list/deliveryman/sent/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "delivery/list/deliveryman/canceled/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "delivery/list/deliveryman/delivered/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "delivery/list/order/**").hasAnyRole("USER")
+
                 )
 
                 .addFilterBefore(securityFilterConfig, UsernamePasswordAuthenticationFilter.class)
