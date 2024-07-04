@@ -23,6 +23,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
+                        .requestMatchers(HttpMethod.GET, "api-docs/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "swagger-ui/**").permitAll()
+
+
                         .requestMatchers(HttpMethod.POST, "user/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "user/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "user/list/valid/**").hasAnyRole("ADMIN")
