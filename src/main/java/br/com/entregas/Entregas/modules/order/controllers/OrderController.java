@@ -3,16 +3,13 @@ package br.com.entregas.Entregas.modules.order.controllers;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.entregas.Entregas.modules.order.dtos.OrderDetailDto;
 import br.com.entregas.Entregas.modules.order.dtos.OrderPageDto;
-import br.com.entregas.Entregas.modules.order.dtos.OrderSaveDto;
 import br.com.entregas.Entregas.modules.order.services.OrderService;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
