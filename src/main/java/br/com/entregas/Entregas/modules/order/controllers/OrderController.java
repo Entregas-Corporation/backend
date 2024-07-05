@@ -86,10 +86,6 @@ public class OrderController {
         return service.detail(id);
     }
 
-    @PatchMapping("/update/{id}")
-    public OrderDetailDto patchOneOrder(@RequestBody OrderSaveDto newOrder, @PathVariable String id) {
-        return service.update(newOrder, id);
-    }
 
     @GetMapping("/status/canceled/{id}")
     public OrderDetailDto patchStatusByCanceled(@PathVariable String id) {
