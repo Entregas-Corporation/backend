@@ -55,8 +55,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "product-category/list/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "product-category/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "product-category/detail/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "product-category/toggle/activity/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "product-category/update/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "product-category/toggle/activity/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "product-category/update/**").hasAnyRole("ADMIN")
 
                         .requestMatchers(HttpMethod.POST, "service/register").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "service/list/institute/valid/**").hasAnyRole("USER")
@@ -95,8 +95,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "deliveryman/list/institute/invalid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "deliveryman/list/user/valid/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "deliveryman/list/user/invalid/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "deliveryman/list/valid/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "deliveryman/list/invalid/**").hasAnyRole("USER")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/valid/**").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "deliveryman/list/invalid/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "deliveryman/detail/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "deliveryman/toggle/activity/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "deliveryman/update/**").hasAnyRole("USER")
@@ -119,8 +119,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "order/status/delivered/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "order/status/sent/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "order/detail/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "order/toggle/activity/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "order/update/**").hasAnyRole("USER")
 
                         .requestMatchers(HttpMethod.POST, "order-item/register").hasAnyRole("USER")
 
