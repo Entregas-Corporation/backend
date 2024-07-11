@@ -2,23 +2,37 @@ package br.com.entregas.Entregas.modules.product.dtos.mapper;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import br.com.entregas.Entregas.core.config.UploadConfig;
 import br.com.entregas.Entregas.modules.product.dtos.ProductDetailDto;
 import br.com.entregas.Entregas.modules.product.dtos.ProductSaveDto;
 import br.com.entregas.Entregas.modules.product.models.ProductModel;
 
 @Component
 public class ProductMapper {
-    public ProductSaveDto toDto(ProductModel product) {
+
+    @Value("${file.upload-dir.product}")
+    private String uploadDir;
+
+    public ProductSaveDto toDto(ProductModel product, MultipartFile file) {
         if (product == null) {
             return null;
         }
+
+        if (file != null) {
+            String storageFileName = file + product.getCreated().toString() + product.getUpdated().toString() + product.getName() + file.getSize() + file.getOriginalFilename();
+            UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
+            product.setImage(storageFileName);
+        }
+
         return new ProductSaveDto(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
-                product.getImage(),
+                file,
                 product.getPrice(),
                 product.getQuantity(),
                 product.getInstitute(),
@@ -32,6 +46,7 @@ public class ProductMapper {
         if (product == null) {
             return null;
         }
+
         return new ProductDetailDto(
             product.getId(),
             product.getName(),
@@ -55,9 +70,18 @@ public class ProductMapper {
         if (productDto.id() != null) {
             product.setId(productDto.id());
         }
+
+        MultipartFile file = productDto.image();
+
+        if (file != null) {
+            String storageFileName = file + product.getCreated().toString() + product.getUpdated().toString() + product.getName() + file.getSize() + file.getOriginalFilename();
+            UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
+            product.setImage(storageFileName);
+        }
+        
+
         product.setName(productDto.name());
         product.setDescription(productDto.description());
-        product.setImage(productDto.image());
         product.setPrice(productDto.price());
         product.setQuantity(productDto.quantity());
         product.setInstitute(productDto.institute());

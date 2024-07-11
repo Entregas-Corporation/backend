@@ -144,9 +144,6 @@ public class ProductService {
             if (product.description() != null) {
                 recordFound.setDescription(product.description());
             }
-            if (product.image() != null) {
-                recordFound.setImage(product.image());
-            }
             if (product.price() != null){
                 recordFound.setPrice(product.price());
             }
@@ -158,7 +155,7 @@ public class ProductService {
             }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
-        }).map(inst -> mapper.toDto(inst))
+        }).map(inst -> mapper.toDto(inst, product.image()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Produto")))));
     }
 
@@ -169,7 +166,7 @@ public class ProductService {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
                     return repository.save(recordFound);
-                }).map(product -> mapper.toDto(product))
+                }).map(product -> mapper.toDto(product, null))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Produto")))));
     }
 }

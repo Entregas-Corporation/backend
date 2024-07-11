@@ -59,6 +59,12 @@ public class InstituteModel {
     @Column(name = "cidade", length = 255, nullable = false)
     private String city;
 
+    @Column(name = "numero")
+    private Integer number;
+
+    @Column(name = "complemento")
+    private String complement;
+
     @NotBlank(groups = {GroupValidation.Create.class})
     @Size(max = 255)
     @Column(name = "longitude", length = 255, nullable = false)

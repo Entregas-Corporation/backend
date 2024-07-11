@@ -9,6 +9,8 @@ public record InstituteDetailDto(
         String description,
         String image,
         String city,
+        Integer number,
+        String complement,
         String longitude,
         String latitude,
         String whatsapp,

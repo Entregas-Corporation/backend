@@ -103,6 +103,8 @@ public class InstituteService {
                 institute.description(),
                 institute.image(),
                 institute.city(),
+                institute.number(),
+                institute.complement(),
                 institute.longitude(),
                 institute.latitude(),
                 institute.whatsapp(),
@@ -126,14 +128,17 @@ public class InstituteService {
             if (institute.city() != null) {
                 recordFound.setCity(institute.city());
             }
+            if (institute.number() != null) {
+                recordFound.setNumber(institute.number());
+            }
+            if (institute.complement() != null) {
+                recordFound.setComplement(institute.complement());
+            }
             if (institute.description() != null) {
                 recordFound.setDescription(institute.description());
             }
             if (institute.freight_cost_km() != null) {
                 recordFound.setFreight_cost_km(institute.freight_cost_km());
-            }
-            if (institute.image() != null) {
-                recordFound.setImage(institute.image());
             }
             if (institute.latitude() != null) {
                 recordFound.setLatitude(institute.latitude());
@@ -150,7 +155,7 @@ public class InstituteService {
             }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
-        }).map(inst -> mapper.toDto(inst))
+        }).map(inst -> mapper.toDto(inst, institute.image()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")))));
     }
 
@@ -167,7 +172,7 @@ public class InstituteService {
                         productRepository.save(recordFound.getProducts().get(i)).setValid(!recordFound.getProducts().get(i).getValid());
                     }
                     return repository.save(recordFound);
-                }).map(institute -> mapper.toDto(institute))
+                }).map(institute -> mapper.toDto(institute, null))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Estabelecimento")))));
     }
 }

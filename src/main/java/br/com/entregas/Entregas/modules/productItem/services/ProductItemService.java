@@ -94,7 +94,7 @@ public class ProductItemService {
                                 }
 
                                 product.setQuantity(product.getQuantity() - recordFound.getQuantity());
-                                productService.update(productMapper.toDto(product), product.getId());
+                                productService.update(productMapper.toDto(product, null), product.getId());
                                 recordFound.setActived(productItem.actived());
                         }
 

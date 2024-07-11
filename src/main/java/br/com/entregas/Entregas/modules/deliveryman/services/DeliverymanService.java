@@ -134,14 +134,11 @@ public class DeliverymanService {
     }
 
     @Transactional
-    public DeliverymanDetailDto update(DeliverymanSaveDto Deliveryman, String id) {
+    public DeliverymanDetailDto update(DeliverymanSaveDto deliveryman, String id) {
         return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
-            if (Deliveryman.curriculum() != null) {
-                recordFound.setCurriculum(Deliveryman.curriculum());
-            }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
-        }).map(inst -> mapper.toDto(inst))
+        }).map(inst -> mapper.toDto(inst, deliveryman.curriculum()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Entregador")))));
     }
 
@@ -152,7 +149,7 @@ public class DeliverymanService {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
                     return repository.save(recordFound);
-                }).map(Deliveryman -> mapper.toDto(Deliveryman))
+                }).map(deliveryman -> mapper.toDto(deliveryman, null))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Entregador")))));
     }
 }
