@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -87,12 +86,12 @@ public class ProductController {
 
     @PostMapping("/register")
     public ProductDetailDto registerOneProduct(
-            @Validated(GroupValidation.Create.class) @RequestBody ProductSaveDto newProduct) {
+            @Validated(GroupValidation.Create.class) ProductSaveDto newProduct) {
         return service.save(newProduct);
     }
 
     @PatchMapping("/update/{id}")
-    public ProductDetailDto patchOneProduct(@RequestBody ProductSaveDto newProduct, @PathVariable String id) {
+    public ProductDetailDto patchOneProduct(ProductSaveDto newProduct, @PathVariable String id) {
         return service.update(newProduct, id);
     }
 

@@ -22,8 +22,8 @@ public class ProductMapper {
             return null;
         }
 
-        if (file != null) {
-            String storageFileName = file + product.getCreated().toString() + product.getUpdated().toString() + product.getName() + file.getSize() + file.getOriginalFilename();
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
             product.setImage(storageFileName);
         }
@@ -73,8 +73,8 @@ public class ProductMapper {
 
         MultipartFile file = productDto.image();
 
-        if (file != null) {
-            String storageFileName = file + product.getCreated().toString() + product.getUpdated().toString() + product.getName() + file.getSize() + file.getOriginalFilename();
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
             product.setImage(storageFileName);
         }
