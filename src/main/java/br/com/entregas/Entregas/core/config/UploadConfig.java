@@ -12,10 +12,10 @@ import br.com.entregas.Entregas.core.constants.ExceptionMessageConstant;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
 
 public final class UploadConfig {
-    public final static void upload(String uploadDir, String storageFileName, String fileName, MultipartFile image) {
+    public final static void upload(String uploadDir, String storageFileName, String fileName, MultipartFile file) {
         try {
             Files.deleteIfExists(Paths.get(uploadDir + fileName));
-            InputStream inputStream = image.getInputStream();
+            InputStream inputStream = file.getInputStream();
             Files.copy(inputStream, Paths.get(uploadDir + storageFileName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new DomainException(ExceptionMessageConstant.fileError);

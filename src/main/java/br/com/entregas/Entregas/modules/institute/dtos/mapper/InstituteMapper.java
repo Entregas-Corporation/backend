@@ -22,8 +22,8 @@ public class InstituteMapper {
             return null;
         }
 
-        if (file != null) {
-            String storageFileName = file + institute.getCreated().toString() + institute.getUpdated().toString() + institute.getName() + file.getSize() + file.getOriginalFilename();
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
             institute.setImage(storageFileName);
         }
@@ -80,8 +80,8 @@ public class InstituteMapper {
 
         MultipartFile file = instituteDto.image();
 
-        if (instituteDto.image() != null) {
-            String storageFileName = file + institute.getCreated().toString() + institute.getUpdated().toString() + institute.getName() + file.getSize() + file.getOriginalFilename();
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
             institute.setImage(storageFileName);
         }
