@@ -8,6 +8,7 @@ public record ServiceDetailDto(
         String id,
         String name,
         String description,
+        String image,
         ServiceMode mode,
         Double price,
         String institute,

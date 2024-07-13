@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,12 +61,12 @@ public class ServiceController {
 
     @PostMapping("/register")
     public ServiceDetailDto registerOneService(
-            @Validated(GroupValidation.Create.class) @RequestBody ServiceSaveDto newService) {
+            @Validated(GroupValidation.Create.class) ServiceSaveDto newService) {
         return service.save(newService);
     }
 
     @PatchMapping("/update/{id}")
-    public ServiceDetailDto patchOneService(@RequestBody ServiceSaveDto newService, @PathVariable String id) {
+    public ServiceDetailDto patchOneService(ServiceSaveDto newService, @PathVariable String id) {
         return service.update(newService, id);
     }
 

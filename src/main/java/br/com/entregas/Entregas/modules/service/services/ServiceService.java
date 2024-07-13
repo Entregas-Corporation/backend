@@ -94,6 +94,7 @@ public class ServiceService {
                 service.id(),
                 service.name(),
                 service.description(),
+                service.image(),
                 service.mode(),
                 service.price(),
                 service.institute(),
@@ -120,7 +121,7 @@ public class ServiceService {
             }
             recordFound.setUpdated(LocalDateTime.now());
             return repository.save(recordFound);
-        }).map(inst -> mapper.toDto(inst))
+        }).map(inst -> mapper.toDto(inst, service.image()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Serviço")))));
     }
 
@@ -131,7 +132,7 @@ public class ServiceService {
                     recordFound.setActived(!recordFound.getActived());
                     recordFound.setUpdated(LocalDateTime.now());
                     return repository.save(recordFound);
-                }).map(Service -> mapper.toDto(Service))
+                }).map(Service -> mapper.toDto(Service, null))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Serviço")))));
     }
 }

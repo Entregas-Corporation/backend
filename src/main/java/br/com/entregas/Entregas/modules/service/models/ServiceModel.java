@@ -48,6 +48,10 @@ public class ServiceModel {
     private String description;
 
     @NotNull(groups = GroupValidation.Create.class)
+    @Column(name = "imagem", nullable = false)
+    private String image;
+
+    @NotNull(groups = GroupValidation.Create.class)
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_servico", nullable = false)
     private ServiceMode mode;
