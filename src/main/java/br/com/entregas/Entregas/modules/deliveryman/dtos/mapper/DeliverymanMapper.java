@@ -22,11 +22,12 @@ public class DeliverymanMapper {
             return null;
         }
 
-        if (file != null) {
-            String storageFileName = file + deliveryman.getCreated().toString() + deliveryman.getUpdated().toString() + file.getSize() + file.getOriginalFilename();
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, deliveryman.getCurriculum(), file);
             deliveryman.setCurriculum(storageFileName);
         }
+
         return new DeliverymanSaveDto(
                 deliveryman.getId(),
                 file,
@@ -62,9 +63,9 @@ public class DeliverymanMapper {
         }
  
         MultipartFile file = deliverymanDto.curriculum();
-
-        if (file != null) {
-            String storageFileName = file + deliveryman.getCreated().toString() + deliveryman.getUpdated().toString() + file.getSize() + file.getOriginalFilename();
+        
+        if (file != null && !file.isEmpty()) {
+            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
             UploadConfig.upload(uploadDir, storageFileName, deliveryman.getCurriculum(), file);
             deliveryman.setCurriculum(storageFileName);
         }
