@@ -18,7 +18,7 @@ import br.com.entregas.Entregas.modules.product.dtos.ProductPageDto;
 import br.com.entregas.Entregas.modules.product.dtos.ProductSaveDto;
 import br.com.entregas.Entregas.modules.product.dtos.mapper.ProductMapper;
 import br.com.entregas.Entregas.modules.product.repositories.ProductRepository;
-
+import br.com.entregas.Entregas.modules.productItem.models.ProductItemModel;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -27,6 +27,7 @@ public class ProductService {
     private ProductRepository repository;
     private ProductMapper mapper;
     private InstituteRepository instituteRepository;
+    private OptionalProductItemService productItemService;
 
     public ProductPageDto pageableProduct(int page, int pageSize, List<ProductDetailDto> productList) {
 
@@ -41,7 +42,8 @@ public class ProductService {
         return new ProductPageDto(productPage.getContent(), productPage.getTotalElements(),
         productPage.getTotalPages());
     }
-
+    
+    
     @Transactional
     public ProductPageDto listValid(int page, int pageSize) {
         List<ProductDetailDto> productList = repository.findAll().stream()
@@ -154,7 +156,12 @@ public class ProductService {
                 recordFound.setCategory(product.category());
             }
             recordFound.setUpdated(LocalDateTime.now());
-            return repository.save(recordFound);
+
+            for (ProductItemModel item : recordFound.getProduct_itens()) {
+                productItemService.update(recordFound, item.getId());
+            }
+
+             return repository.save(recordFound);
         }).map(inst -> mapper.toDto(inst, product.image()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Produto")))));
     }

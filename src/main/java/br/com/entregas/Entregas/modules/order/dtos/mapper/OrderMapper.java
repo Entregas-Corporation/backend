@@ -17,9 +17,7 @@ public class OrderMapper {
         return new OrderSaveDto(
                 order.getId(),
                 order.getStatus(),
-                order.getPrice(),
                 order.getFreight(),
-                order.getTotal(),
                 order.getInstitute(),
                 order.getUserName(),
                 order.getUserEmail(),
@@ -34,9 +32,7 @@ public class OrderMapper {
         return new OrderDetailDto(
                 order.getId(),
                 order.getStatus(),
-                order.getPrice(),
                 order.getFreight(),
-                order.getTotal(),
                 order.getDate(),
                 order.getInstitute().getName(),
                 order.getUserName(),
@@ -58,8 +54,6 @@ public class OrderMapper {
         }
         order.setDate(orderDto.date());
         order.setFreight(orderDto.freight());
-        order.setPrice(orderDto.price());
-        order.setTotal(orderDto.total());
         order.setStatus(orderDto.status());
         order.setInstitute(orderDto.institute());
         order.setUserName(orderDto.userName());

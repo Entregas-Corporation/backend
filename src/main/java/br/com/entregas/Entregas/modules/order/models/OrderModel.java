@@ -45,12 +45,6 @@ public class OrderModel {
     @Column(name = "valor_frete", nullable = true)
     private Double freight;
 
-    @Column(name = "price", nullable = true)
-    private Double price;
-
-    @Column(name = "total", nullable = true)
-    private Double total;
-
     @Column(name = "status_pedido", nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusOrder status;

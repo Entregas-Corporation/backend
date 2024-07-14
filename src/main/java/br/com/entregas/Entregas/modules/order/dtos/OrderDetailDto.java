@@ -10,9 +10,7 @@ import br.com.entregas.Entregas.modules.orderItem.models.OrderItemModel;
 public record OrderDetailDto(
         String id,
         StatusOrder status,
-        Double price,
         Double freight,
-        Double total,
         Date date,
         String institute,
         String userName,

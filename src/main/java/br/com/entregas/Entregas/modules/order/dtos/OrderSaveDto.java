@@ -8,9 +8,7 @@ import br.com.entregas.Entregas.modules.order.enums.StatusOrder;
 public record OrderSaveDto(
                 String id,
                 StatusOrder status,
-                Double price,
                 Double freight,
-                Double total,
                 InstituteModel institute,
                 String userName,
                 String userEmail,

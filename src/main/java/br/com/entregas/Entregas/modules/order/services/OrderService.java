@@ -133,9 +133,6 @@ public class OrderService {
         @Transactional
         public OrderDetailDto update(OrderSaveDto order, String id) {
                 return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
-                        if (order.price() != null) {
-                                recordFound.setPrice(order.price());
-                        }
                         if (order.freight() != null) {
                                 recordFound.setFreight(order.freight());
                         }

@@ -40,7 +40,7 @@ public class ProductItemService {
                 return repository.findById(id)
                                 .map(productItem -> mapper.toDtoDetail(productItem))
                                 .orElseThrow(() -> new DomainException(
-                                                ExceptionMessageConstant.notFound("Entregador")));
+                                                ExceptionMessageConstant.notFound("Item de Produto")));
         }
 
         @Transactional
@@ -54,7 +54,7 @@ public class ProductItemService {
                                 productItem.product(),
                                 productItem.user(),
                                 productItem.quantity(),
-                                productItem.quantity() * productRepository.findById(productItem.product().getId()).get()
+                                productRepository.findById(productItem.product().getId()).get()
                                                 .getPrice(),
                                 true);
 
@@ -70,7 +70,7 @@ public class ProductItemService {
                                         throw new DomainException(ExceptionMessageConstant.invalidQuantity);
                                 }
                                 recordFound.setQuantity(productItem.quantity());
-                                recordFound.setPrice(productItem.quantity() * productRepository
+                                recordFound.setPrice(productRepository
                                                 .findById(recordFound.getProduct().getId()).get().getPrice());
                         }
                         if (productItem.actived() != null) {
