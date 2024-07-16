@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.entregas.Entregas.modules.order.dtos.ApiSaveDto;
 import br.com.entregas.Entregas.modules.order.dtos.OrderDetailDto;
 import br.com.entregas.Entregas.modules.order.dtos.OrderPageDto;
 import br.com.entregas.Entregas.modules.order.services.OrderService;
@@ -20,6 +21,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class OrderController {
     private OrderService service;
+
+    @GetMapping("/api/list")
+    public List<ApiSaveDto> findAllOrderDeliveredToApi(){
+        return service.api();
+    }
 
     @GetMapping("/list/user/canceled/{id}")
     public OrderPageDto findAllOrderCanceledByUser(
@@ -74,8 +80,6 @@ public class OrderController {
     public List<OrderDetailDto> findAllOrderRequestedByInstitute(@PathVariable String id) {
         return service.listRequestedByInstitute(id);
     }
-
-
 
 
     @GetMapping("/detail/{id}")

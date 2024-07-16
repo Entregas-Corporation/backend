@@ -23,6 +23,7 @@ public class ProductItemMapper {
                 productItem.getUser(),
                 productItem.getQuantity(),
                 productItem.getPrice(),
+                productItem.getOrderItem(),
                 productItem.getActived()
                 );
     }
@@ -40,6 +41,7 @@ public class ProductItemMapper {
                 productItemModel.getUser(),
                 productItemModel.getQuantity(),
                 productItemModel.getPrice(),
+                productItemModel.getOrderItem(),
                 productItemModel.getActived()
                 );
             list.add(newProductItem);
@@ -76,6 +78,7 @@ public class ProductItemMapper {
         productItem.setQuantity(productItemDto.quantity());
         productItem.setPrice(productItemDto.price());
         productItem.setActived(productItemDto.actived());
+        productItem.setOrderItem(productItemDto.orderItem());
         productItem.setUpdated(LocalDateTime.now());
 
         return productItem;

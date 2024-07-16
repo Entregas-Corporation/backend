@@ -40,7 +40,7 @@ public class OrderItemService {
         public List<OrderItemModel> save(OrderItemModel orderItem) {
                 List<OrderItemModel> listOrderItem = new ArrayList<>();
                 List<String> institutesIds = new ArrayList<>();
-              
+
                 for (ProductItemModel productItem : orderItem.getProductItens()) {
                         ProductItemModel newProductItem = productItemRepository.findById(productItem.getId()).get();
                         ProductModel newProduct = productRepository.findById(newProductItem.getProduct().getId()).get();
@@ -52,14 +52,12 @@ public class OrderItemService {
                 for (String institutesId : institutesIds) {
                         List<ProductItemModel> productItemList = new ArrayList<>();
                         double freight = 0;
- 
-        
+
                         for (ProductItemModel productItem : orderItem.getProductItens()) {
                                 ProductItemModel newProductItem = productItemRepository.findById(productItem.getId())
                                                 .get();
                                 ProductModel newProduct = productRepository
                                                 .findById(newProductItem.getProduct().getId()).get();
-
 
                                 if (newProduct.getInstitute().getId().equals(institutesId)) {
 
@@ -68,25 +66,20 @@ public class OrderItemService {
                                                         productItemRepository.findById(newProductItem.getId()).get()
                                                                         .getId());
                                         freight = instituteRepository.findById(institutesId).get().getFreight_cost_km();
-                                        
+
                                         productItemList.add(newProductItem);
                                 }
                         }
 
-                        // no final é adicionado um produto em uma lista de itens pra agrupar de acordo
-                        // com o institute
-
-                        // Aqui é criado um pedido para cada loja
-
                         double freightCost = freight * orderItem.getDistance();
 
                         String userName = userRepository
-                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
-                        .get().getName();
+                                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
+                                        .get().getName();
 
                         String userEmail = userRepository
-                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
-                        .get().getEmail();
+                                        .findById(instituteRepository.findById(institutesId).get().getUser().getId())
+                                        .get().getEmail();
 
                         OrderModel newOrderModel = new OrderModel();
                         newOrderModel.setStatus(StatusOrder.REQUESTED);
@@ -97,14 +90,21 @@ public class OrderItemService {
                         newOrderModel.setUpdated(LocalDateTime.now());
                         orderRepository.save(newOrderModel);
                         sendEmailService.sendRequestedOrder(
-                                newOrderModel.getUserName(), newOrderModel.getUserEmail(), instituteRepository.findById(institutesId).get().getName());
+                                        newOrderModel.getUserName(), newOrderModel.getUserEmail(),
+                                        instituteRepository.findById(institutesId).get().getName());
 
-                        // Aqui é criado um novo item pedido e adicionado na lista de itens pedido
                         OrderItemModel newOrderItemModel = new OrderItemModel();
                         newOrderItemModel.setOrder(newOrderModel);
                         newOrderItemModel.setProductItens(productItemList);
                         newOrderItemModel.setInstitute(orderItem.getInstitute());
                         newOrderItemModel.setDistance(orderItem.getDistance());
+
+                        for (ProductItemModel productItem : productItemList) {
+                                productItem.setOrderItem(newOrderItemModel);
+
+                                productItemService.update(productItemMapper.toDto(productItem), productItem.getId());
+                        }
+
                         listOrderItem.add(newOrderItemModel);
                 }
 

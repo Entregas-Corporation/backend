@@ -56,6 +56,7 @@ public class ProductItemService {
                                 productItem.quantity(),
                                 productRepository.findById(productItem.product().getId()).get()
                                                 .getPrice(),
+                                productItem.orderItem(),
                                 true);
 
                 return mapper.toDtoDetail(repository.save(mapper.toEntity(newProductItem)));
@@ -75,6 +76,9 @@ public class ProductItemService {
                         }
                         if (productItem.actived() != null) {
                                 recordFound.setActived(productItem.actived());
+                        }
+                        if (productItem.orderItem() != null) {
+                                recordFound.setOrderItem(productItem.orderItem());
                         }
                         recordFound.setUpdated(LocalDateTime.now());
                         return repository.save(recordFound);
@@ -104,8 +108,6 @@ public class ProductItemService {
                                 .orElseThrow(() -> new DomainException(
                                                 ExceptionMessageConstant.notFound("Item de Produto")))));
         }
-
-        
 
         @Transactional
         public void toggleActivity(String id) {
