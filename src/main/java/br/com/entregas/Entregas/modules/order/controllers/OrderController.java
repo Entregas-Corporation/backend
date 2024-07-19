@@ -22,9 +22,14 @@ import lombok.AllArgsConstructor;
 public class OrderController {
     private OrderService service;
 
-    @GetMapping("/api/list")
-    public List<ApiSaveDto> findAllOrderDeliveredToApi(){
-        return service.api();
+    @GetMapping("/api/city-sells/list")
+    public List<ApiSaveDto> findAllOrderDeliveredByCitySellsToApi(){
+        return service.listOrderDeliveredByCitySells();
+    }
+
+    @GetMapping("/api/city-buy/list")
+    public List<ApiSaveDto> findAllOrderDeliveredByCityBuyToApi(){
+        return service.listOrderDeliveredByCityBuy();
     }
 
     @GetMapping("/list/user/canceled/{id}")

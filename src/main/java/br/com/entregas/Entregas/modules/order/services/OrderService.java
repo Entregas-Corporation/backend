@@ -62,8 +62,7 @@ public class OrderService {
         }
 
         @Transactional
-        public List<ApiSaveDto> api() {
-
+        public List<ApiSaveDto> listOrderDeliveredByCitySells() {
                 Map<String, Integer> productCityQuantityMap = new HashMap<>();
 
                 List<OrderDetailDto> listDeliveredOrder = repository.findByStatus(StatusOrder.DELIVERED).stream()
@@ -75,6 +74,44 @@ public class OrderService {
                                                 .toDtoList(orderItemModel.getProductItens())) {
                                         String productName = productItemSaveDto.product().getName();
                                         String cityName = productItemSaveDto.product().getInstitute().getCity();
+                                        String key = productName + ":" + cityName;
+
+                                        productCityQuantityMap.put(key, productCityQuantityMap.getOrDefault(key, 0)
+                                                        + productItemSaveDto.quantity());
+                                }
+                        }
+                }
+
+                List<ApiSaveDto> apiSaveDtosList = new ArrayList<>();
+                int id = 1;
+
+                for (Map.Entry<String, Integer> entry : productCityQuantityMap.entrySet()) {
+                        String[] parts = entry.getKey().split(":");
+                        String productName = parts[0];
+                        String cityName = parts[1];
+                        Integer quantity = entry.getValue();
+
+                        ApiSaveDto apiSaveDto = new ApiSaveDto(id++, cityName, productName, quantity);
+                        apiSaveDtosList.add(apiSaveDto);
+                }
+
+                return apiSaveDtosList;
+        }
+
+
+        @Transactional
+        public List<ApiSaveDto> listOrderDeliveredByCityBuy() {
+                Map<String, Integer> productCityQuantityMap = new HashMap<>();
+
+                List<OrderDetailDto> listDeliveredOrder = repository.findByStatus(StatusOrder.DELIVERED).stream()
+                                .map(order -> mapper.toDtoDetail(order)).collect(Collectors.toList());
+
+                for (OrderDetailDto orderDetailDto : listDeliveredOrder) {
+                        for (OrderItemModel orderItemModel : orderDetailDto.orders()) {
+                                for (ProductItemSaveDto productItemSaveDto : productItemMapper
+                                                .toDtoList(orderItemModel.getProductItens())) {
+                                        String productName = productItemSaveDto.product().getName();
+                                        String cityName = orderItemModel.getInstitute().getCity();
                                         String key = productName + ":" + cityName;
 
                                         productCityQuantityMap.put(key, productCityQuantityMap.getOrDefault(key, 0)

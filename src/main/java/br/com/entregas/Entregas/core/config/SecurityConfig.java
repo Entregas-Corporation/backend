@@ -119,7 +119,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "order/status/delivered/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "order/status/sent/**").hasAnyRole("USER")
                         .requestMatchers(HttpMethod.GET, "order/detail/**").hasAnyRole("USER")
-                        .requestMatchers(HttpMethod.GET, "order/api/list").permitAll()
+                        .requestMatchers(HttpMethod.GET, "order/api/city-sells/list/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "order/api/city-buy/list/**").permitAll()
 
                         .requestMatchers(HttpMethod.POST, "order-item/register").hasAnyRole("USER")
 
