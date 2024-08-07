@@ -30,6 +30,7 @@ public class TokenUserService {
             String token = JWT.create()
                     .withIssuer("auth-api")
                     .withSubject(userDto.email())
+                    .withClaim("id", userDto.id())
                     .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
             return token;
