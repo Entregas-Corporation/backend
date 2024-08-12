@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.entregas.Entregas.core.constants.ExceptionMessageConstant;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
 
-public final class UploadConfig {
+public final class UploadLocalConfig {
     public final static void upload(String uploadDir, String storageFileName, String fileName, MultipartFile file) {
         try {
             Files.deleteIfExists(Paths.get(uploadDir + fileName));

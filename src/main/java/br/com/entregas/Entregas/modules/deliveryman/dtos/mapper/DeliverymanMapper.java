@@ -2,31 +2,34 @@ package br.com.entregas.Entregas.modules.deliveryman.dtos.mapper;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.entregas.Entregas.core.config.UploadConfig;
 import br.com.entregas.Entregas.modules.deliveryman.dtos.DeliverymanDetailDto;
 import br.com.entregas.Entregas.modules.deliveryman.dtos.DeliverymanSaveDto;
 import br.com.entregas.Entregas.modules.deliveryman.models.DeliverymanModel;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class DeliverymanMapper {
 
-    @Value("${file.upload-dir.deliveryman}")
-    private String uploadDir;
-
+    /*
+     * @Value("${file.upload-dir.deliveryman}")
+     * private String uploadDir;
+     */
     public DeliverymanSaveDto toDto(DeliverymanModel deliveryman, MultipartFile file) {
         if (deliveryman == null) {
             return null;
         }
 
-        if (file != null && !file.isEmpty()) {
-            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, deliveryman.getCurriculum(), file);
-            deliveryman.setCurriculum(storageFileName);
-        }
+        /*
+         * String storageFileName = file.toString() + file.getSize() +
+         * file.getOriginalFilename();
+         * UploadLocalConfig.upload(uploadDir, storageFileName,
+         * deliveryman.getCurriculum(), file);
+         * deliveryman.setCurriculum(storageFileName);
+         */
 
         return new DeliverymanSaveDto(
                 deliveryman.getId(),
@@ -61,14 +64,19 @@ public class DeliverymanMapper {
         if (deliverymanDto.id() != null) {
             deliveryman.setId(deliverymanDto.id());
         }
- 
-        MultipartFile file = deliverymanDto.curriculum();
-        
-        if (file != null && !file.isEmpty()) {
-            String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, deliveryman.getCurriculum(), file);
-            deliveryman.setCurriculum(storageFileName);
-        }
+
+        /*
+         * MultipartFile file = deliverymanDto.curriculum();
+         */
+
+        /*
+         * String storageFileName = file.toString() + file.getSize() +
+         * file.getOriginalFilename();
+         * UploadLocalConfig.upload(uploadDir, storageFileName,
+         * deliveryman.getCurriculum(), file);
+         * deliveryman.setCurriculum(storageFileName);
+         */
+
         deliveryman.setInstitute(deliverymanDto.institute());
         deliveryman.setUser(deliverymanDto.user());
         deliveryman.setActived(deliverymanDto.actived());

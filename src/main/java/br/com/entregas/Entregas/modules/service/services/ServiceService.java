@@ -9,15 +9,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.entregas.Entregas.core.constants.ExceptionMessageConstant;
 import br.com.entregas.Entregas.core.exceptions.DomainException;
+import br.com.entregas.Entregas.core.services.upload.CloudinaryUploadService;
 import br.com.entregas.Entregas.modules.institute.repositories.InstituteRepository;
 import br.com.entregas.Entregas.modules.service.dtos.ServiceDetailDto;
 import br.com.entregas.Entregas.modules.service.dtos.ServicePageDto;
 import br.com.entregas.Entregas.modules.service.dtos.ServiceSaveDto;
 import br.com.entregas.Entregas.modules.service.dtos.mapper.ServiceMapper;
 import br.com.entregas.Entregas.modules.service.enums.ServiceMode;
+import br.com.entregas.Entregas.modules.service.models.ServiceModel;
 import br.com.entregas.Entregas.modules.service.repositories.ServiceRepository;
 import lombok.AllArgsConstructor;
 
@@ -27,6 +30,7 @@ public class ServiceService {
     private ServiceRepository repository;
     private ServiceMapper mapper;
     private InstituteRepository instituteRepository;
+    private CloudinaryUploadService cloudinaryUploadService;
 
     public ServicePageDto pageableService(int page, int pageSize, List<ServiceDetailDto> serviceList) {
 
@@ -88,6 +92,7 @@ public class ServiceService {
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Serviço")));
     }
 
+    @SuppressWarnings("null")
     @Transactional
     public ServiceDetailDto save(ServiceSaveDto service) {
         ServiceSaveDto newService = new ServiceSaveDto(
@@ -100,9 +105,25 @@ public class ServiceService {
                 service.institute(),
                 true,
                 true);
-        return mapper.toDtoDetail(repository.save(mapper.toEntity(newService)));
-    }
+ boolean erro = false;
 
+        ServiceModel recordFound = null;
+        try {
+            recordFound = repository.save(mapper.toEntity(newService));
+        } catch (Exception e) {
+            erro = true;
+        } finally {
+            if (!erro) {
+                MultipartFile file = service.image();
+                String imageUrl = cloudinaryUploadService.uploadFile(file, newService.id());
+                recordFound.setImage(imageUrl);
+                repository.save(recordFound);
+            }
+        }
+
+        return mapper.toDtoDetail(recordFound);    }
+
+    @SuppressWarnings({ "finally", "null" })
     @Transactional
     public ServiceDetailDto update(ServiceSaveDto service, String id) {
         return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
@@ -120,8 +141,25 @@ public class ServiceService {
                 recordFound.setPrice(service.price());
             }
             recordFound.setUpdated(LocalDateTime.now());
-            return repository.save(recordFound);
-        }).map(inst -> mapper.toDto(inst, service.image()))
+            ServiceModel newRecordFound = null;
+            boolean error = false;
+            try {
+                newRecordFound = repository.save(recordFound);
+            } catch (Exception e) {
+                error = true;
+            } finally {
+                if (!error) {
+                    MultipartFile file = service.image();
+                    if (file != null && !file.isEmpty()) {
+
+                        cloudinaryUploadService.deleteFile(recordFound.getId());
+                        String imageUrl = cloudinaryUploadService.uploadFile(file, recordFound.getId());
+                        recordFound.setImage(imageUrl);
+                    }
+                }
+                recordFound.setUpdated(LocalDateTime.now());
+                return repository.save(newRecordFound);
+            }        }).map(inst -> mapper.toDto(inst, service.image()))
                 .orElseThrow(() -> new DomainException(ExceptionMessageConstant.notFound("Serviço")))));
     }
 

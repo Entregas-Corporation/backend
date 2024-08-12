@@ -2,11 +2,9 @@ package br.com.entregas.Entregas.modules.institute.dtos.mapper;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.entregas.Entregas.core.config.UploadConfig;
 import br.com.entregas.Entregas.modules.institute.dtos.InstituteDetailDto;
 import br.com.entregas.Entregas.modules.institute.dtos.InstituteSaveDto;
 import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
@@ -14,9 +12,9 @@ import br.com.entregas.Entregas.modules.institute.models.InstituteModel;
 @Component
 public class InstituteMapper {
 
-    @Value("${file.upload-dir.institute}")
+    /* @Value("${file.upload-dir.institute}")
     private String uploadDir;
-
+ */
     public InstituteSaveDto toDto(InstituteModel institute, MultipartFile file) {
         if (institute == null) {
             return null;
@@ -38,12 +36,12 @@ public class InstituteMapper {
                 institute.getActived(),
                 institute.getValid());
 
-        if (file != null && !file.isEmpty()) {
+        /* if (file != null && !file.isEmpty()) {
             String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
+            UploadLocalConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
             institute.setImage(storageFileName);
         }
-
+ */
         return newInstitute;
     }
 
@@ -79,8 +77,8 @@ public class InstituteMapper {
             institute.setId(instituteDto.id());
         }
 
-        MultipartFile file = instituteDto.image();
-
+/*         MultipartFile file = instituteDto.image();
+ */
         institute.setName(instituteDto.name());
         institute.setDescription(instituteDto.description());
         institute.setCity(instituteDto.city());
@@ -95,11 +93,11 @@ public class InstituteMapper {
         institute.setValid(instituteDto.valid());
         institute.setUpdated(LocalDateTime.now());
 
-        if (file != null && !file.isEmpty()) {
+        /* if (file != null && !file.isEmpty()) {
             String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
+            UploadLocalConfig.upload(uploadDir, storageFileName, institute.getImage(), file);
             institute.setImage(storageFileName);
-        }
+        } */
 
         return institute;
     }

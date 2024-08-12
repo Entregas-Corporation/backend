@@ -45,7 +45,7 @@ public class TreatmentModel {
     private String title;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "assunto", nullable = false)
+    @Column(name = "assunto", nullable = false, columnDefinition = "TEXT")
     private String subject;
     
     @Enumerated(EnumType.STRING)

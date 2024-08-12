@@ -46,11 +46,11 @@ public class ProductModel {
     private String name;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "imagem", nullable = false)
+    @Column(name = "imagem", columnDefinition = "TEXT")
     private String image;
 
     @NotNull(groups = GroupValidation.Create.class)

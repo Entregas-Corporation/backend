@@ -47,11 +47,11 @@ public class InstituteModel {
     private String name;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String description;
     
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "imagem", nullable = false)
+    @Column(name = "imagem", columnDefinition = "TEXT")
     private String image;
 
     @NotBlank(groups = {GroupValidation.Create.class})
@@ -62,7 +62,7 @@ public class InstituteModel {
     @Column(name = "numero")
     private Integer number;
 
-    @Column(name = "complemento")
+    @Column(name = "complemento", columnDefinition = "TEXT")
     private String complement;
 
     @NotBlank(groups = {GroupValidation.Create.class})

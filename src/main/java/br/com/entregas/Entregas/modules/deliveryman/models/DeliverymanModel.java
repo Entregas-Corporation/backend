@@ -35,7 +35,7 @@ public class DeliverymanModel {
     private String id;
 
     @NotBlank(groups = GroupValidation.Create.class)
-    @Column(name = "curriculo", nullable = false)
+    @Column(name = "curriculo", columnDefinition = "TEXT")
     private String curriculum;
 
     @NotNull(groups = {GroupValidation.Create.class})

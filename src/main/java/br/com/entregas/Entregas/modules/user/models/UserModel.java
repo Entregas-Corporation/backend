@@ -51,7 +51,7 @@ public class UserModel {
     @Column(name = "email", length = 255, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "photo")
+    @Column(name = "photo", columnDefinition = "TEXT")
     private String photo;
     
     @Column(name = "nivel", nullable = false)

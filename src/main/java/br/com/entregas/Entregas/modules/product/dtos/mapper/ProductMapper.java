@@ -2,11 +2,9 @@ package br.com.entregas.Entregas.modules.product.dtos.mapper;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import br.com.entregas.Entregas.core.config.UploadConfig;
 import br.com.entregas.Entregas.modules.product.dtos.ProductDetailDto;
 import br.com.entregas.Entregas.modules.product.dtos.ProductSaveDto;
 import br.com.entregas.Entregas.modules.product.models.ProductModel;
@@ -14,19 +12,19 @@ import br.com.entregas.Entregas.modules.product.models.ProductModel;
 @Component
 public class ProductMapper {
 
-    @Value("${file.upload-dir.product}")
-    private String uploadDir;
+    /* @Value("${file.upload-dir.product}")
+    private String uploadDir; */
 
     public ProductSaveDto toDto(ProductModel product, MultipartFile file) {
         if (product == null) {
             return null;
         }
-
+/* 
         if (file != null && !file.isEmpty()) {
             String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
+            UploadLocalConfig.upload(uploadDir, storageFileName, product.getImage(), file);
             product.setImage(storageFileName);
-        }
+        } */
 
         return new ProductSaveDto(
                 product.getId(),
@@ -71,13 +69,13 @@ public class ProductMapper {
             product.setId(productDto.id());
         }
 
-        MultipartFile file = productDto.image();
+     /*    MultipartFile file = productDto.image();
 
         if (file != null && !file.isEmpty()) {
             String storageFileName = file.toString() + file.getSize() + file.getOriginalFilename();
-            UploadConfig.upload(uploadDir, storageFileName, product.getImage(), file);
+            UploadLocalConfig.upload(uploadDir, storageFileName, product.getImage(), file);
             product.setImage(storageFileName);
-        }
+        } */
         
 
         product.setName(productDto.name());
