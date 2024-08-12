@@ -1,12 +1,8 @@
 # Entregas - Backend
 
-    O Entregas é uma ferramenta web e móvel de delivery, que não só oferece um fluxo de entrega mais preciso, mas também proporciona um ambiente simplificado para o gerenciamento de produtos variáveis em lojas virtuais, reduzindo os custos de manutenção no mercado digital. Nesse contexto, esse repositório tem como finalidade codificar todo o desenvolvimento backend do sistema. 
-
-## Sobre as Branches
-
-- ### User
-
-        Nesta branch, foi criado o módulo de user, incluindo autenticação e regras de autorização, além de configurações de smtp, a fim de garantir maior segurança aos usuários. 
+    O Entregas é uma ferramenta web e móvel de delivery, que não só oferece um fluxo de entrega mais preciso, mas também proporciona um ambiente simplificado para o gerenciamento de produtos variáveis em lojas virtuais, reduzindo os custos de manutenção no mercado digital. 
+    
+    O repositório criado possui finalidade de desenvolvimento o backend do sistema, usando o freamwork spring. 
 
 ## Tecnologias usadas
 
@@ -36,6 +32,9 @@
 - Java Mail Sender
 - Validation
 - Java JWT
+- Cloudinary
+- Spring Doc
+- Spring Fox Swagger
 
 ## Inicialização
 
@@ -65,4 +64,4 @@
     
 # Endpoints
 
-    endpoints/entregas.json
+    entregasEndpoints.json
