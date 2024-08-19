@@ -42,8 +42,13 @@
 
         Antes de tudo, instale o JDK17 e o Maven na sua máquina. Siga o tutorial: https://www.treinaweb.com.br/blog/configurando-ambiente-de-desenvolvimento-spring-boot-no-windows
 
-- ### No Linux
+        Instale o docker e o docker-composer na sua máquina. 
 
+- ### No Linux
+        
+
+        [Sem o uso do docker] 
+        
         Execute o comando para limpar e reconstruir o projeto spring no linux:
 
         - mvn clean package
@@ -51,8 +56,11 @@
         Execute o comando para rodar o projeto no linux:
 
         - mvn spring-boot:run
-        
+
+
 - ### No Windows
+
+        [Sem o uso do docker]
 
         Execute o comando para limpar e reconstruir o projeto spring no windows:
         
@@ -62,6 +70,19 @@
 
         - ./mvnw spring-boot:run
     
+## Deploy [LINUX]
+
+- ### ATUALIZE O PACKAGE
+
+        sudo service postgresql start
+        mvn package
+        sudo service postgresql stop
+
+- ### REBUILDE E TESTE AS IMAGENS
+        
+        sudo docker-compose up -d
+        sudo docker-compose up
+
 # Endpoints
 
     entregasEndpoints.json
