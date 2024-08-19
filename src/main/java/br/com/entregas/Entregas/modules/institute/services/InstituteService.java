@@ -94,13 +94,9 @@ public class InstituteService {
     @SuppressWarnings("null")
     @Transactional
     public InstituteDetailDto save(InstituteSaveDto institute) {
-        boolean nameUsed = repository.findByName(mapper.toEntity(institute).getName()).isPresent();
         boolean whatsappUsed = repository.findByWhatsapp(mapper.toEntity(institute).getWhatsapp()).isPresent();
         if (whatsappUsed) {
             throw new DomainException(ExceptionMessageConstant.attributeUsed("Whatsapp"));
-        }
-        if (nameUsed) {
-            throw new DomainException(ExceptionMessageConstant.attributeUsed("Nome"));
         }
         InstituteSaveDto newInstitue = new InstituteSaveDto(
                 institute.id(),
@@ -142,11 +138,7 @@ public class InstituteService {
     public InstituteDetailDto update(InstituteSaveDto institute, String id) {
         return mapper.toDtoDetail(mapper.toEntity(repository.findById(id).map(recordFound -> {
             if (institute.name() != null) {
-                if (repository.findByName(mapper.toEntity(institute).getName()).isPresent()) {
-                    throw new DomainException(ExceptionMessageConstant.attributeUsed("Nome"));
-                } else {
-                    recordFound.setName(institute.name());
-                }
+                recordFound.setName(institute.name());
             }
             if (institute.city() != null) {
                 recordFound.setCity(institute.city());

@@ -43,7 +43,7 @@ public class InstituteModel {
 
     @NotBlank(groups = GroupValidation.Create.class)
     @Size(max = 255)
-    @Column(name = "nome", length = 255, nullable = false, unique = true)
+    @Column(name = "nome", length = 255, nullable = false)
     private String name;
 
     @NotBlank(groups = GroupValidation.Create.class)
